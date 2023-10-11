@@ -297,6 +297,78 @@ fertilizer <- countyag |>
   mutate(VALUE = ifelse(VALUE == "(D)", 0, VALUE),
          state_lower = tolower(STATE_NAME))
 
+countyag <- group_by(countyag, SHORT_DESC)
+
+save(countyag, file = "countyag.csv")
+
+#START HERE
+
+
+
+projdf <- countyag |> 
+  filter(SHORT_DESC %in% c("FARM OPERATIONS - ACRES OPERATED", 
+                            "AG LAND, CROPLAND - ACRES", 
+                           "AG LAND, IRRIGATED - ACRES",
+                           "CROP TOTALS - SALES, MEASURED IN $",
+                           "INCOME, NET CASH FARM, OF OPERATIONS - NET INCOME, MEASURED IN $ / OPERATION",
+                           "FERTILIZER TOTALS, INCL LIME & SOIL CONDITIONERS - EXPENSE, MEASURED IN $",
+                           "CHEMICAL TOTALS - EXPENSE, MEASURED IN $",
+                           "FUELS, INCL LUBRICANTS - EXPENSE, MEASURED IN $",
+                           "LABOR, HIRED - EXPENSE, MEASURED IN $",
+                           "LABOR, CONTRACT - EXPENSE, MEASURED IN $",
+                           "LABOR, HIRED - NUMBER OF WORKERS",
+                           "AG LAND - ACRES",
+                           "EMUS - SALES, MEASURED IN HEAD",
+                           "HONEY, BEE COLONIES - INVENTORY, MEASURED IN COLONIES",
+                           "HONEY - SALES, MEASURED IN $",
+                           "MUSHROOM SPAWN - SALES, MEASURED IN $",
+                           "PRACTICES, ROTATIONAL OR MGMT INTENSIVE GRAZING - NUMBER OF OPERATIONS",
+                           "PRODUCERS - AGE, AVG, MEASURED IN YEARS",
+                           "CUT CHRISTMAS TREES - OPERATIONS WITH SALES",
+                           "ORNAMENTAL FISH - OPERATIONS WITH SALES & DISTRIBUTION",
+                           "BISON - OPERATIONS WITH SALES",
+                           "AQUATIC PLANTS - OPERATIONS WITH AREA IN PRODUCTION"
+                           )) |> 
+  filter(is.na(DOMAINCAT_DESC)) |> 
+  distinct() |> 
+  mutate(VALUE = ifelse(VALUE == "(D)", 0, VALUE),
+         state_lower = tolower(STATE_NAME))
+
+projdf <- projdf |> 
+  select(c(VALUE, COUNTY_NAME, COUNTY_CODE, STATE_NAME))
+
+projdf2 <- projdf |> 
+  pivot_wider(names_from = SHORT_DESC, values_from = VALUE)
+
+df1 <- projdf2 |> 
+  clean_names()
+
+df1 <- df1 |> 
+  rename("farm_acres" = farm_operations_acres_operated) |> 
+  rename("cropland_acres" = ag_land_cropland_acres) |> 
+  rename("irrigated_acres" = ag_land_irrigated_acres) |> 
+  rename("farm_income_1" = income_net_cash_farm_of_operations_net_income_measured_in_operation) |> 
+  rename("xmas_tree_sale" = cut_christmas_trees_operations_with_sales) |> 
+  rename("fertilizer_use_$" = fertilizer_totals_incl_lime_soil_conditioners_expense_measured_in) |> 
+  rename("chemical_use_$" = chemical_totals_expense_measured_in) |> 
+  rename("fuel_use_$" = fuels_incl_lubricants_expense_measured_in) |> 
+  rename("hired_labor_cost_$" = labor_hired_expense_measured_in) |> 
+  rename("contract_labor_cost_$" = labor_contract_expense_measured_in) |> 
+  rename("worker_number" = labor_hired_number_of_workers) |> 
+  rename("emus_sold" = emus_sales_measured_in_head) |> 
+  rename("bee_colonies" = honey_bee_colonies_inventory_measured_in_colonies) |> 
+  rename("honey_sold" = honey_sales_measured_in) |> 
+  rename("ornamental_fish" = ornamental_fish_operations_with_sales_distribution) |> 
+  rename("bison_sale" = bison_operations_with_sales) |> 
+  rename("aquatic_plants" = aquatic_plants_operations_with_area_in_production) |> 
+  rename("mushroom_spawn_sale_$" = mushroom_spawn_sales_measured_in) |> 
+  rename("grazing_rotation" = practices_rotational_or_mgmt_intensive_grazing_number_of_operations) |> 
+  rename("producer_age_group" = producers_age_avg_measured_in_years)
+
+
+
+
+
 # select relevant columns
 d_cropland <- countyag %>% 
   filter(COMMODITY_DESC == "AG LAND") %>% 
@@ -400,6 +472,37 @@ big_map_merged <- full_join(tigris_counties,
 
 
 # Merge datasets ====
+df1 <- df1 |> 
+  mutate(state = tolower(state_name))
+
+us_counties <- us_counties |> 
+  mutate(state_lower = tolower(state))
+
+land_area <- land_area |> 
+  mutate(state_lower = tolower(state))
+
+df2 <- df1 |> 
+  left_join(land_area, by = c("county_code", "state_lower"))
+
+df2 <- df2 |> 
+  left_join(us_counties, by = c("county_code", "state_lower"))
+
+df2 <- df2 |> 
+  select(!c(state.y, county.y, state_name, state.x))
+
+df3 <- df2 |> 
+  filter(!state_lower == "alaska")
+
+df3 <- df3 |> 
+  select(!c(county_name, state_lower, abbr))
+
+df3 <- df3 |> 
+  rename("county" = county.x)
+
+df3 <- df3 |> 
+  filter(!is.na(state))
+
+
 food_county <- firms_wider %>% 
   # Merge with county data
   full_join(full_county_list,
