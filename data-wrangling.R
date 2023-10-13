@@ -214,37 +214,6 @@ full_county_list <- inner_join(us_counties,
            county_acreage_2000,
            state_lower,
            abbr))
-  
-
-# Economic Census Data ====
-# read in economic census data as firms
-#firms_raw <- read_csv('raw-data/county_3digitnaics_2019.csv') %>% 
-  # clean up column names
-#  clean_names()
-
-# Clean up economic census data
-#firms <- 
-#  firms_raw %>% 
-  # filter for Food and Beverage Stores and Food Services and Drinking Places
-#  filter(naics_description %in% c("Food and Beverage Stores", 
-#                                  "Food Services and Drinking Places"),
-         # filter for only total value of firms per category
-#        enterprise_size == "1: Total") %>% 
-  # selecting relevant columns 
-#  select(state_name, county, county_name, naics_description, establishments) %>% 
-  # rename columns for consistency with other data sets
-#  rename(county_code = county,
-#         state = state_name,
-#         county = county_name) %>% 
-  # make state names all lowercase to eventually join with other datasets
-#  mutate(state_lower = tolower(state))
-
-# pivot to wider format
-#firms_wider <-
-#  firms %>% 
-#  pivot_wider(names_from = naics_description,
-#              values_from = establishments) %>% 
-#  clean_names()
 
 
 # Agricultural Census Data ====
