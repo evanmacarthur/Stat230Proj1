@@ -1,40 +1,11 @@
-# ==============================================================================
-# Economic food and beverage firm data obtained from 
-# The US Annual Establishment Industry Table: https://www.census.gov/data/tables/2019/econ/susb/2019-susb-annual.html 
-# 
-# Agricultural Census Data obtained from 
-# Agricultural Census in 2017 Query Tool: https://www.nass.usda.gov/Publications/AgCensus/2017/ 
-# 
-# County data obtained from 
-# Wikipedia: https://en.wikipedia.org/wiki/List_of_United_States_counties_and_county_equivalents 
-#
-# Authors: Evan MacArthur-Waltz, Andrew Leung, Emily Byers
-# Last updated: 10/16/22
-# 
-# Data dictionary:
-#
-# `state`: state name.
-# `state_lower`: state name in lowercase format.
-# `county-code`: 3 digit county code.
-# `county`: county name with first letter capitalized.
-# `naics_description`: The North American Industry 
-#     Classification System (NAICS) is the standard used by 
-#     Federal statistical agencies in classifying business 
-#     establishments for the purpose of collecting, analyzing, 
-#     and publishing statistical data related to the U.S. 
-#     business economy. Source - https://www.census.gov/naics/
-# `establishments`: a single physical location where one 
-#     predominant activity occurs.
-# `food_and_beverage_stores`: according to Bureau of Labor Services, this
-#     NAICS category includes usually retail food and beverages merchandise 
-#     from fixed point-of-sale locations.
-# `food_services_and_drinking_places`: according to Bureau of Labor Services, 
-#     this NAICS category includes places that prepare meals, snacks, and 
-#     beverages to customer order for immediate on-premises and off-premises 
-#     consumption.
-# ==============================================================================
+#Initial wrangling by Evan MacArthur-Waltz, Emily Byers, Andrew Leung, rewrangled by Evan MacArthur-Waltz
 
 # load packages
+library(mosaic)
+library(car)
+library(rjson)
+library(jsonlite)
+library(httr)
 library(tidyverse)
 library(glue)
 library(purrr)
@@ -46,6 +17,8 @@ library(utils)
 library(dplyr)
 library(states)
 library(tigris)
+library(GGally)
+library(readr)
 
 # Wrangle data =================================================================
 
@@ -245,33 +218,33 @@ full_county_list <- inner_join(us_counties,
 
 # Economic Census Data ====
 # read in economic census data as firms
-firms_raw <- read_csv('raw-data/county_3digitnaics_2019.csv') %>% 
+#firms_raw <- read_csv('raw-data/county_3digitnaics_2019.csv') %>% 
   # clean up column names
-  clean_names()
+#  clean_names()
 
 # Clean up economic census data
-firms <- 
-  firms_raw %>% 
+#firms <- 
+#  firms_raw %>% 
   # filter for Food and Beverage Stores and Food Services and Drinking Places
-  filter(naics_description %in% c("Food and Beverage Stores", 
-                                  "Food Services and Drinking Places"),
+#  filter(naics_description %in% c("Food and Beverage Stores", 
+#                                  "Food Services and Drinking Places"),
          # filter for only total value of firms per category
-         enterprise_size == "1: Total") %>% 
+#        enterprise_size == "1: Total") %>% 
   # selecting relevant columns 
-  select(state_name, county, county_name, naics_description, establishments) %>% 
+#  select(state_name, county, county_name, naics_description, establishments) %>% 
   # rename columns for consistency with other data sets
-  rename(county_code = county,
-         state = state_name,
-         county = county_name) %>% 
+#  rename(county_code = county,
+#         state = state_name,
+#         county = county_name) %>% 
   # make state names all lowercase to eventually join with other datasets
-  mutate(state_lower = tolower(state))
+#  mutate(state_lower = tolower(state))
 
 # pivot to wider format
-firms_wider <-
-  firms %>% 
-  pivot_wider(names_from = naics_description,
-              values_from = establishments) %>% 
-  clean_names()
+#firms_wider <-
+#  firms %>% 
+#  pivot_wider(names_from = naics_description,
+#              values_from = establishments) %>% 
+#  clean_names()
 
 
 # Agricultural Census Data ====
@@ -284,30 +257,41 @@ countyag <- agcensus %>%
   select(!c(CENSUS_CHAPTER, CENSUS_TABLE, CENSUS_ROW, 
             CENSUS_COLUMN, STATE_FIPS_CODE, STATE_ALPHA))
 
-countyag$VALUE <- as.numeric(gsub(",","", countyag$VALUE))
+#countyag$VALUE <- as.numeric(gsub(",","", countyag$VALUE))
 
-categories <- unique(countyag$SHORT_DESC)
-categories <- as.data.frame(categories)
+
 
 #picking out a few columns
-fertilizer <- countyag |> 
-  filter(str_detect(SHORT_DESC, "FERTILIZER")) |> 
-  filter(is.na(DOMAINCAT_DESC)) |> 
-  distinct() |> 
-  mutate(VALUE = ifelse(VALUE == "(D)", 0, VALUE),
-         state_lower = tolower(STATE_NAME))
+#fertilizer <- countyag |> 
+#  filter(str_detect(SHORT_DESC, "FERTILIZER")) |> 
+#  filter(is.na(DOMAINCAT_DESC)) |> 
+#  distinct() |> 
+#  mutate(VALUE = ifelse(VALUE == "(D)", 0, VALUE),
+#        state_lower = tolower(STATE_NAME))
 
+
+
+
+
+
+               #START HERE
+
+
+
+
+#need to important countyag dataset before you get started here
 countyag <- group_by(countyag, SHORT_DESC)
 
-save(countyag, file = "countyag.csv")
+#This makes a dataframe of just the potential categories to choose from, this df is helpful to copy from to avoid typos
+categories <- unique(countyag$SHORT_DESC)
+categories <- as.data.frame(categories)
+View(categories)
 
-#START HERE
 
-
-
+#temp df that is just selecting the variables you are interested in, replace everything in quotes with SHORT DESC that you are interested in
 projdf <- countyag |> 
   filter(SHORT_DESC %in% c("FARM OPERATIONS - ACRES OPERATED", 
-                            "AG LAND, CROPLAND - ACRES", 
+                           "AG LAND, CROPLAND - ACRES", 
                            "AG LAND, IRRIGATED - ACRES",
                            "CROP TOTALS - SALES, MEASURED IN $",
                            "INCOME, NET CASH FARM, OF OPERATIONS - NET INCOME, MEASURED IN $ / OPERATION",
@@ -327,33 +311,43 @@ projdf <- countyag |>
                            "CUT CHRISTMAS TREES - OPERATIONS WITH SALES",
                            "ORNAMENTAL FISH - OPERATIONS WITH SALES & DISTRIBUTION",
                            "BISON - OPERATIONS WITH SALES",
-                           "AQUATIC PLANTS - OPERATIONS WITH AREA IN PRODUCTION"
-                           )) |> 
+                           "AQUATIC PLANTS - OPERATIONS WITH AREA IN PRODUCTION")) |> 
+  #Takes out problematic rows
   filter(is.na(DOMAINCAT_DESC)) |> 
+  #takes out duplicate rows that were an issue at one point
   distinct() |> 
+  #replaces 0s that didn't read well to actual 0s
   mutate(VALUE = ifelse(VALUE == "(D)", 0, VALUE),
+         #makes a new column with the state names in lower case
          state_lower = tolower(STATE_NAME))
 
+#selects only columns that you need, can add more, but really no reason to change this
 projdf <- projdf |> 
   select(c(VALUE, COUNTY_NAME, COUNTY_CODE, STATE_NAME))
 
+#makes a new df in order to pivot, this is a very important step because it turns the SHORT DESC column with many options for rows
+#into multiple columns. the pivot function is super powerful, but can be a bit. 
 projdf2 <- projdf |> 
   pivot_wider(names_from = SHORT_DESC, values_from = VALUE)
 
+#this is a nice little function that you downloaded the janitor package for, it makes the column names easier to call by making them all tidy
+#this is not as important given we are about to rename them all, but saves a lot of backticks while doing this
 df1 <- projdf2 |> 
   clean_names()
 
+
+#you will need to make a lot of changes here as well, this renames each of variable names to be less shitty
 df1 <- df1 |> 
   rename("farm_acres" = farm_operations_acres_operated) |> 
   rename("cropland_acres" = ag_land_cropland_acres) |> 
   rename("irrigated_acres" = ag_land_irrigated_acres) |> 
   rename("farm_income_1" = income_net_cash_farm_of_operations_net_income_measured_in_operation) |> 
   rename("xmas_tree_sale" = cut_christmas_trees_operations_with_sales) |> 
-  rename("fertilizer_use_$" = fertilizer_totals_incl_lime_soil_conditioners_expense_measured_in) |> 
-  rename("chemical_use_$" = chemical_totals_expense_measured_in) |> 
+  rename("fertilizer_use" = fertilizer_totals_incl_lime_soil_conditioners_expense_measured_in) |> 
+  rename("chemical_use" = chemical_totals_expense_measured_in) |> 
   rename("fuel_use_$" = fuels_incl_lubricants_expense_measured_in) |> 
-  rename("hired_labor_cost_$" = labor_hired_expense_measured_in) |> 
-  rename("contract_labor_cost_$" = labor_contract_expense_measured_in) |> 
+  rename("hired_labor_cost" = labor_hired_expense_measured_in) |> 
+  rename("contract_labor_cost" = labor_contract_expense_measured_in) |> 
   rename("worker_number" = labor_hired_number_of_workers) |> 
   rename("emus_sold" = emus_sales_measured_in_head) |> 
   rename("bee_colonies" = honey_bee_colonies_inventory_measured_in_colonies) |> 
@@ -361,119 +355,20 @@ df1 <- df1 |>
   rename("ornamental_fish" = ornamental_fish_operations_with_sales_distribution) |> 
   rename("bison_sale" = bison_operations_with_sales) |> 
   rename("aquatic_plants" = aquatic_plants_operations_with_area_in_production) |> 
-  rename("mushroom_spawn_sale_$" = mushroom_spawn_sales_measured_in) |> 
+  rename("mushroom_spawn_sale" = mushroom_spawn_sales_measured_in) |> 
   rename("grazing_rotation" = practices_rotational_or_mgmt_intensive_grazing_number_of_operations) |> 
   rename("producer_age_group" = producers_age_avg_measured_in_years)
 
 
 
 
-
-# select relevant columns
-d_cropland <- countyag %>% 
-  filter(COMMODITY_DESC == "AG LAND") %>% 
-  # filter for agricultural land rows
-  filter(str_detect(SHORT_DESC, c("OPERATIONS", "ACRES"))) %>% 
-  # filter for values pertaining to operations and acres
-  filter(SHORT_DESC == "AG LAND, CROPLAND, HARVESTED - ACRES") %>% 
-  # filter for ag land acres and economic description
-  filter(is.na(DOMAINCAT_DESC)) %>% 
-  # removes duplicates
-  distinct() %>% 
-  # making "(D)" into zeroes
-  mutate(VALUE = ifelse(VALUE == "(D)", 0, VALUE),
-         state_lower = tolower(STATE_NAME))
-
-# Filter for operations data
-d_operations <- countyag %>% 
-  filter(SHORT_DESC == "FARM OPERATIONS - NUMBER OF OPERATIONS") %>% 
-  filter(SECTOR_DESC == "ECONOMICS") %>% 
-  distinct() %>% 
-  filter(is.na(DOMAINCAT_DESC)) %>% 
-  # renaming values as operations
-  rename("OPERATIONS" = VALUE) %>% 
-  mutate(state_lower = tolower(STATE_NAME))
-
-#Crop sales data wrangling
-crop_sales <- countyag %>% 
-  filter(str_detect(SECTOR_DESC, c("CROP"))) %>% 
-  mutate(VALUE = ifelse(VALUE == "(D)", 0, VALUE)) %>% 
-  filter(str_detect(SHORT_DESC, c("CROP TOTALS - SALES"))) %>% 
-  distinct() %>% 
-  rename("DOLLARS" = VALUE)
-
-
-
-# corn sales
-df_corn <- countyag %>% 
-  filter(str_detect(COMMODITY_DESC, c("CORN"))) %>% 
-  filter(str_detect(SHORT_DESC, c("SALES, MEASURED"))) %>% 
-  select(c(VALUE, COUNTY_NAME, COUNTY_CODE, STATE_NAME)) %>% 
-  rename("Corn" = VALUE)
-
-# wheat sales
-df_wheat <- countyag %>% 
-  filter(str_detect(COMMODITY_DESC, c("WHEAT"))) %>% 
-  filter(str_detect(SHORT_DESC, c("SALES, MEASURED"))) %>% 
-  select(c(VALUE, COUNTY_NAME, COUNTY_CODE, STATE_NAME)) %>% 
-  rename("Wheat" = VALUE)
-
-# soybean sales
-df_soybean <- countyag %>% 
-  filter(str_detect(COMMODITY_DESC, c("SOYBEAN"))) %>% 
-  filter(str_detect(SHORT_DESC, c("SALES, MEASURED"))) %>% 
-  select(c(VALUE, COUNTY_NAME, COUNTY_CODE, STATE_NAME)) %>% 
-  rename("Soybeans" = VALUE)
-
-# merging corn, wheat, and soybean sales in single dataframe
-threecropsales <- crop_sales %>% 
-  full_join(df_corn, by = c("STATE_NAME", "COUNTY_CODE")) %>% 
-  full_join(df_wheat, by = c("STATE_NAME", "COUNTY_CODE")) %>% 
-  full_join(df_soybean, by = c("STATE_NAME", "COUNTY_CODE")) %>%  
-  select(-ends_with(c(".y", "x.x"))) %>% 
-  select(!c(SHORT_DESC, SECTOR_DESC,
-            COMMODITY_DESC, AGG_LEVEL_DESC, 
-            DOMAINCAT_DESC)) %>% 
-  mutate(state_lower = tolower(STATE_NAME)) %>% 
-  rename(county_code = COUNTY_CODE)
-
-# clean up dataframe
-cropland_final <- d_cropland %>% 
-  full_join(d_operations,
-            by = c("STATE_NAME", "COUNTY_CODE")) %>%
-  # select relevant columns
-  select(STATE_NAME, COUNTY_CODE, VALUE, OPERATIONS) %>% 
-  # add column of state names in lowercase
-  mutate(state_lower = tolower(STATE_NAME)) %>% 
-  # rename county codes column and value column
-  rename(county_code = COUNTY_CODE,
-         ag_acreage = VALUE,
-         operations = OPERATIONS)
-
-# National County Map Data ====
-#generates table of each county and geometry 
-tigris_counties <- counties(state = NULL, cb = TRUE) %>% 
-  clean_names()
-
-#rename to columns to match tigris columns
-us_county_pop_tigris <- full_county_list %>% 
-  rename(state_name = state,
-         countyfp = county_code,
-         name = county)
-
-#adds geometries to complete 
-big_map_merged <- full_join(tigris_counties,
-                            us_county_pop_tigris,
-                            c("countyfp", "name", "state_name")) %>% 
-  rename(county_code = countyfp,
-         county = name,
-         state = state_name)
-
-
-
 # Merge datasets ====
+
+
+# ok so for the join you need to have columns with the same names that the values match from, so we need state_lower and county code in each df
+
 df1 <- df1 |> 
-  mutate(state = tolower(state_name))
+  mutate(state_lower = tolower(state_name))
 
 us_counties <- us_counties |> 
   mutate(state_lower = tolower(state))
@@ -481,125 +376,151 @@ us_counties <- us_counties |>
 land_area <- land_area |> 
   mutate(state_lower = tolower(state))
 
+
+#this joins values from land area to counties that exist in the ag census data
 df2 <- df1 |> 
   left_join(land_area, by = c("county_code", "state_lower"))
 
+#this does the same thing, but for county population
 df2 <- df2 |> 
   left_join(us_counties, by = c("county_code", "state_lower"))
 
+#this takes out some extraction columns
 df2 <- df2 |> 
   select(!c(state.y, county.y, state_name, state.x))
 
+#ok so there is been a bit of persistent issue with alaska and forget exactly why, I think it had to do with not using counties
 df3 <- df2 |> 
   filter(!state_lower == "alaska")
 
+#removes more extra columns columns
 df3 <- df3 |> 
-  select(!c(county_name, state_lower, abbr))
+  select(!c(county_name, abbr))
 
+#renames one last column
 df3 <- df3 |> 
   rename("county" = county.x)
 
+#this just removes values that snuck in that don't have a state associated for whatever reason. 
 df3 <- df3 |> 
-  filter(!is.na(state))
+  filter(!is.na(state_lower))
+
+#ok so this should result in a df that has ~20 columns that you picked from the ag census, population and area at a county level
+#along with county and state names, and county codes. This should be functional for the project part. 
+
+#not a bad idea to do a write_csv/write.csv for this result so that you only have to run the wrangling once between the 4 of your
 
 
-food_county <- firms_wider %>% 
+
+
+
+write_csv(df3, 'C:\\Users\\emaca\\Desktop\\gooddata.csv')
+
+
+
+
+
+
+
+
+
+#food_county <- firms_wider %>% 
   # Merge with county data
-  full_join(full_county_list,
-             by = c("state_lower", "county_code")) %>% 
+#  full_join(full_county_list,
+#             by = c("state_lower", "county_code")) %>% 
   # Merge with ag census data
-  full_join(cropland_final,
-             by = c("state_lower", "county_code")) %>% 
-  full_join(threecropsales,
-            by = c("state_lower", "county_code")) %>% 
+#  full_join(cropland_final,
+#             by = c("state_lower", "county_code")) %>% 
+#  full_join(threecropsales,
+#            by = c("state_lower", "county_code")) %>% 
   # Drop NA counties 
-  drop_na(county.y) %>% 
+#  drop_na(county.y) %>% 
   # Parse number from operations
  # mutate(operations = parse_number(operations)) %>% 
   # Select relevant columns
-  select(county_code, 
+#  select(county_code, 
          # Keep only full county list county and state columns
-         county.y, 
-         state.y, 
-         county_acreage_2000,
-         population,
-         food_and_beverage_stores, 
-         food_services_and_drinking_places,
-         ag_acreage,
-         operations,
-         Corn,
-         Wheat,
-         Soybeans,
-         DOLLARS) %>% 
+#         county.y, 
+#         state.y, 
+#         county_acreage_2000,
+#         population,
+#         food_and_beverage_stores, 
+#         food_services_and_drinking_places,
+#         ag_acreage,
+#         operations,
+#         Corn,
+##         Wheat,
+#         Soybeans,
+#         DOLLARS) %>% 
   # Rename state.x and county.x
-  rename(state = state.y,
-         county = county.y)
+#  rename(state = state.y,
+#         county = county.y)
 
 # Create separate dataframe 
-food_map_merged <- inner_join(big_map_merged,
-                             food_county,
-            by = c("state", "county_code")) %>%
-  select(c(statefp,
-           county_code,
-           county.x,
-           state,
-           state_lower,
-           population.x,
-           food_and_beverage_stores,
-           food_services_and_drinking_places,
-           county_acreage_2000.x,
-           ag_acreage,
-           operations,
-           countyns,
-           affgeoid,
-           geoid,
-           namelsad,
-           stusps,
-           lsad,
-           aland,
-           awater,
-           geometry)) %>%
-  rename(state_code = statefp,
-         county = county.x,
-         population = population.x,
-         county_acreage_2000 = county_acreage_2000.x,
-         state_abbr = stusps)
+#food_map_merged <- inner_join(big_map_merged,
+#                             food_county,
+#            by = c("state", "county_code")) %>%
+#  select(c(statefp,
+#           county_code,
+#           county.x,
+#           state,
+#           state_lower,
+#           population.x,
+#           food_and_beverage_stores,
+#           food_services_and_drinking_places,
+#           county_acreage_2000.x,
+#           ag_acreage,
+#           operations,
+#           countyns,
+#           affgeoid,
+#           geoid,
+#           namelsad,
+#           stusps,
+#           lsad,
+#           aland,
+#           awater,
+#           geometry)) %>%
+#  rename(state_code = statefp,
+#         county = county.x,
+#         population = population.x,
+#         county_acreage_2000 = county_acreage_2000.x,
+#         state_abbr = stusps)
 
 # Calculations added to food_map_merged ====
 # proportion of stores per 100 people in each county
-food_map_merged <- food_map_merged %>% 
-  mutate(store_pop_prop = round((food_and_beverage_stores / population)*100, 3),
-         ag_land_prop = round((ag_acreage / county_acreage_2000), 3),
-         # convert NAs to zeroes
-         store_pop_prop = coalesce(store_pop_prop, 0),
-         ag_land_prop = coalesce(ag_land_prop, 0))
+#food_map_merged <- food_map_merged %>% 
+#  mutate(store_pop_prop = round((food_and_beverage_stores / population)*100, 3),
+#        ag_land_prop = round((ag_acreage / county_acreage_2000), 3),
+#         # convert NAs to zeroes
+#         store_pop_prop = coalesce(store_pop_prop, 0),
+#         ag_land_prop = coalesce(ag_land_prop, 0))
 
 # Get rid of Inf value
-food_map_merged <- food_map_merged %>%
-  filter(ag_land_prop != Inf)
+#food_map_merged <- food_map_merged %>%
+#  filter(ag_land_prop != Inf)
 
 # County name frequency ====
-wc_df <- food_county %>% 
-  select(county) %>% 
-  mutate(val = 1) %>% 
-  group_by(county) %>% 
-  summarize(sum = sum(val)) %>% 
-  arrange(desc(sum)) %>% 
-  head(50)
+#wc_df <- food_county %>% 
+#  select(county) %>% 
+#  mutate(val = 1) %>% 
+#  group_by(county) %>% 
+#  summarize(sum = sum(val)) %>% 
+#  arrange(desc(sum)) %>% 
+#  head(50)
 
 
 # Save datasets ================================================================
 
 # Check if subfolders exist; if not, create them
-if (!dir.exists("the-state-of-food/data")) {
-  dir.create("the-state-of-food/data")
-}
+#if (!dir.exists("the-state-of-food/data")) {
+#  dir.create("the-state-of-food/data")
+#}
 
 # Save all cleaned data frames in a single .RData file in Shiny app *data* folder
-save(food_county,
-     food_map_merged,
-     wc_df,
-     file = "the-state-of-food/data/county-food.RData")
+#save(food_county,
+#     food_map_merged,
+#     wc_df,
+#     file = "the-state-of-food/data/county-food.RData")
 
 
 
