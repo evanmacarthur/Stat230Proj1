@@ -43,23 +43,9 @@ trellis.par.set(theme=theme.mosaic())
 options(digits=5)
 
 theme_set(theme_bw())
+options(warn=-1)
 ```
 
-[DELETE & DON'T INCLUDE the following instructions in your proposal]   
-
-* Propose a proposal: The proposal part should include at least the following:  
-    + Work Team number, all members’ names, and Work Team Project Title (if there is one).
-    + Introduction & Motivation - What do you plan to study? What is the main (research) question of interest? WHY is this question interesting or important to your team?
-    + Dataset - Where does it come from (including a citation of the data source)? What variables are you planning to use? Which is the response variable for your analysis?  
- 
-Since this is a warm-up project, I would recommend each work team to choose at least 4 variables but no more than 6 variables (including the response variable) from your dataset for the Work Team project.
-
-* Perform an EDA (including graphs, numerical summaries, AND verbal descriptions) on the chosen variables that will be used in your modeling. Use appropriate graphical displays to justify that MLR is a reasonable choice for modeling (i.e. the CHOOSE step in 4-step modeling). You may find the document **Modeling in R: EDA** under *Useful Resources* particularly helpful for this deliverable.      
-Additional Notes -   
-
-This document should also include all the R code used to *wrangle* data, as well as those used to create the *EDA* output (plots, tables, numerical summaries, etc). Recall that you've learned various `R` functions for data wrangling back in **R Activity 2** (Part 3) and **R Activity 4** (Part 2), as well as from **R Tutorials** (under *Useful Resources*). Don't hesitate to ask for help from me or SDS fellows on this front.      
-
-[--- DELETE until here: End of Instructions ---]
 
 
 ## Introduction & Motivation  
@@ -69,7 +55,7 @@ We are interested in how we can attempt to predict the profitability of farming 
 https://www.nass.usda.gov/AgCensus/
 
 
-Our data is sourced from the United States Census of Agriculture, between the years ______ and _____, along with county demographic information from Wikipedia, sourced from the U.S Census. 
+Our data is sourced from the United States Census of Agriculture, between the years 2009 and 2017, along with county demographic information from Wikipedia, sourced from the U.S Census. 
 
 Our response variable in reported farm income, and we are planning to predict it with a number of variables (pop_density, farm acres, bee colonies, grazing rotation, fertilizer use)
 
@@ -82,7 +68,7 @@ On RStudio, be sure to save your dataset file in *the SAME folder* you saved thi
 
 ```
 
-```{r}
+```{r import data select columsn and calculate}
 ## wrangle!!  
 df0 <- read_csv("gooddata.csv")
 df0 <- df0 |> 
@@ -101,93 +87,176 @@ df1 <- df |>
 
 Explore distributions and associations graphically and numerically.
 
-```{r, message=FALSE}
+```{r ggpairs, message=FALSE}
 ggpairs(df1, columns = 1:8, progress = FALSE)
 
 ggplot(data = df1, aes(x = farm_income_1))+
   geom_histogram()
-#looks like it could maybe use a transformation
-
+#looks like farm income could maybe use a transformation to improve linearity. 
 ```
+> There are significant correlations with all variables, but the linearity looks pretty bad, will try some transformations. 
 
-```{r}
+```{r farm income}
+gf_histogram(~farm_income_1, data=df1)
+
+favstats(~farm_income_1, data=df1)
+```
+>The mean is 46841, the median is 27146, we can also tell it looks right skewed from the histogram, and the IQR is 61407
+
+```{r fixing farm income}
 df2 <- df1 |> 
   mutate(farm_income_2 = log(farm_income_1+55152))
 
 #we had one value that was very low because it was by far the smallest, even after we transposed the data. 
 df2 <- df2 |> 
   filter(farm_income_2 > 5)
-```
+gf_histogram(~farm_income_2, data=df2)
 
-```{r, fig.height=6, fig.width=6}
+favstats(~farm_income_2, data=df2)
+```
+>Looks much improved, the mean is 11.4, and median is 11.318, and the histogram still is not ideal, but better. The IQR = 0.699
+
+
+
+```{r ggpairs with transformed farm income, fig.height=6, fig.width=6}
 ggpairs(df2, columns = 1:8, progress = FALSE)
-
-ggplot(data = df2, aes(x = farm_income_2))+
-  geom_histogram(bins = 30)
-
 ```
-```{r}
+
+>This improved linearity slightly, but still questionable, lets look at predictors. 
+
+
+
+```{r fertilizer use}
+gf_point(data = df2, farm_income_2 ~ fertilizer_use) |> 
+  gf_lm()
+gf_histogram(~fertilizer_use, data=df2)
+
+favstats(~fertilizer_use, data=df2)
+
+#fertilizer use is super right skewed and not linear w/ farm income, so trying a transformation
+```
+>This does not look great, heavily skewed distribution and it is difficult to assess the scatterplot, the mean is 7664465, the median is 3679500, and the IQR is 9724500. Will try transforming. 
+
+```{r transformed fertilizer}
 df3 <- df2 |> 
   mutate(fertilizer_use_2 = sqrt(fertilizer_use))
 
 gf_point(data = df3, farm_income_2 ~ fertilizer_use_2) |> 
   gf_lm()
+gf_histogram(~fertilizer_use_2, data=df3)
+
+favstats(~fertilizer_use_2, data=df3)
+
+```
+>Once again, this improves how the data looks. The distribution is still somewhat right skewed, with a mean of 2260.6	and a median of 1918.2, and an IQR of 2268.9, but this is an improvement, but linearity looks better based on the scatterplot. 
 
 
+```{r population density}
+gf_point(data = df3, farm_income_2 ~ pop_dens) |> 
+  gf_lm()
+gf_histogram(~pop_dens, data=df3)
+
+favstats(~pop_dens, data=df3)
+
+#population density is super right skewed and not linear w/ farm income, so trying a transformation
+```
+> This one is also not great, scatterplot not very useful, the histogram is right skewed, the mean is 0.29915 and median is 0.064434, and the IQR is 0.14179.  
+
+
+```{r population density transform}
+df3 <- df3 |> 
+  mutate(pop_dens_2 = log(pop_dens+1))
+#again looks a lot better
+
+#looks like we still have a value that is inf because there is somehow 0 acres in the county, just going to remove this row
+
+df3 <- df3 |> 
+  filter(!is.infinite(pop_dens_2))
+
+gf_histogram(data = df3, ~ pop_dens_2, bins = 100)
+
+gf_point(data = df3, farm_income_2 ~ pop_dens_2) |> 
+  gf_lm()
+
+favstats(~pop_dens_2, data=df3)
+```
+>This one still does not look great after transforming, but it probably helped. The graph is still right skewed, but not as strongly, with a mean of 0.16482 and a median of 0.062443, and IQR of 0.1296, and the relationship based on the scatter plot is not very useful. 
+
+
+
+```{r farm acres}
+gf_point(data = df3, farm_income_2 ~ farm_acres) |> 
+  gf_lm()
+gf_histogram(data = df3, ~ farm_acres)
+favstats(~farm_acres, data=df3)
+
+#farm acres is super right skewed and not linear w/ farm income, so trying a transformation
+```
+
+>Once again, unhelpful scatterplot, right skewed distribution, mean of 291893, median of 179306	and IQR of 282196
+
+```{r farm acres transform}
+df3 <- df3 |> 
+  mutate(farm_acres_2 = sqrt(farm_acres))
+
+gf_point(data = df3, farm_income_2 ~ farm_acres_2) |> 
+  gf_lm()
+gf_histogram(data = df3, ~ farm_acres_2)
+favstats(~farm_acres_2, data=df3)
+#looks better, but still pretty questionable
+```
+>This transformation improved it somewhat, the histogram is less right skewed, but the relationship does not look very linear based on the scatter plot, the mean is 468.11 and the median is 423.45, and the IQR is 321.57
+
+
+
+```{r bee colonies}
+gf_point(data = df3, farm_income_2 ~ bee_colonies) |> 
+  gf_lm()
+gf_histogram(data = df3, ~ bee_colonies)
+favstats(~bee_colonies, data=df3)
+
+#bee colonies is super right skewed and not linear w/ farm income, so trying a transformation
+#again, much improved
+```
+> Very strongly right skewed histogram, scatterplot is not useful for assessing linearity, the mean is 848.12, the median is 93, and the IQR is 234
+
+```{r bee colonies transform}
+df3 <- df3 |> 
+  mutate(bee_colonies_2 = log(bee_colonies+1))
+
+gf_point(data = df3, farm_income_2 ~ bee_colonies_2) |> 
+  gf_lm()
+gf_histogram(data = df3, ~ bee_colonies_2)
+favstats(~bee_colonies_2, data=df3)
+```
+>
+
+
+
+```{r grazing rotation}
+gf_point(data = df3, farm_income_2 ~ grazing_rotation) |> 
+  gf_lm()
+
+#looks a little problematic, give something a shot
+
+df3 <- df3 |> 
+  mutate(grazing_rotation_2 = log(grazing_rotation))
+
+gf_point(data = df3, farm_income_2 ~ grazing_rotation_2) |> 
+  gf_lm()
+#looks maybe a little better I guess
+```
+
+
+```{r ggpairs again}
+df4 <- df3 |> 
+  select(c(farm_income_2, farm_acres_2, pop_dens_2, grazing_rotation_2, fertilizer_use_2, bee_colonies_2))
+ggpairs(df4, columns = 1:6, progress = FALSE)
 ```
 
 
 
-```{r}
-#df1 <- df |> 
-#  mutate(age = cut(producer_age_group, breaks = c(-Inf,20,30,40,50,60,70,Inf))
 
-lm1 <- lm(data = df1, farm_income_1 ~ pop_dens + age + farm_acres + bee_colonies + grazing_rotation + fertilizer_use)
-msummary(lm1)
-vif(lm1)
-#looks good!
-mplot(lm1, which = 1)
-mplot(lm1, which = 2)
-mplot(lm1, which = 3)
-mplot(lm1, which = 5)
-
-
-ggplot(data = df1, aes(x = farm_income_1))+
-  geom_histogram()
-```
-
-
-```{r}
-
-
-ggplot(data = df2, aes(x = farm_income_2))+
-  geom_histogram(bins = 50)
-
-lm2 <- lm(data = df2, farm_income_2 ~ pop_dens + farm_acres + bee_colonies + grazing_rotation + fertilizer_use)
-msummary(lm2)
-
-mplot(lm2, which = 1)
-mplot(lm2, which = 2)
-mplot(lm2, which = 3)
-mplot(lm2, which = 5)
-
-
-
-```
-> These look much better
-
-
-```{r probably not helpful but fun}
-df3 <- df2[c(395,1026,1653),]
-
-ggplot(data = df2, aes(x = bee_colonies, y = farm_income_2))+
-  geom_point()+
-  geom_point(data = df3, aes(x = bee_colonies, y = farm_income_2), color = "red")
-```
-
-```{r}
-
-```
 
 
 

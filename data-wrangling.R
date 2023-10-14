@@ -493,3 +493,53 @@ write_csv(df3, 'C:\\Users\\emaca\\Desktop\\gooddata.csv')
 
 
 
+
+## BRING BACK INTO RMD AFTER SUBMITTING
+```{r trying to fit a model}
+#df1 <- df |> 
+#  mutate(age = cut(producer_age_group, breaks = c(-Inf,20,30,40,50,60,70,Inf))
+
+lm1 <- lm(data = df1, farm_income_1 ~ pop_dens + age + farm_acres + bee_colonies + grazing_rotation + fertilizer_use)
+msummary(lm1)
+vif(lm1)
+#looks good!
+mplot(lm1, which = 1)
+mplot(lm1, which = 2)
+mplot(lm1, which = 3)
+mplot(lm1, which = 5)
+
+
+ggplot(data = df1, aes(x = farm_income_1))+
+  geom_histogram()
+```
+
+
+```{r}
+
+
+ggplot(data = df2, aes(x = farm_income_2))+
+  geom_histogram(bins = 50)
+
+lm2 <- lm(data = df2, farm_income_2 ~ pop_dens + farm_acres + bee_colonies + grazing_rotation + fertilizer_use)
+msummary(lm2)
+
+mplot(lm2, which = 1)
+mplot(lm2, which = 2)
+mplot(lm2, which = 3)
+mplot(lm2, which = 5)
+
+
+
+```
+> These look much better
+
+
+```{r probably not helpful but fun}
+df3 <- df2[c(395,1026,1653),]
+
+ggplot(data = df2, aes(x = bee_colonies, y = farm_income_2))+
+  geom_point()+
+  geom_point(data = df3, aes(x = bee_colonies, y = farm_income_2), color = "red")
+```
+
+
