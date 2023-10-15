@@ -1,0 +1,20 @@
+"0","## wrangle!!  "
+"0","df0 <- read_csv(""gooddata.csv"")"
+"2","[1mRows: [22m[34m3077[39m [1mColumns: [22m[34m26[39m"
+"2","[36m--[39m [1mColumn specification[22m [36m------------------------------------------------------------------------------------------------[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (4): county_code, honey_sold, state_lower, county
+[32mdbl[39m  (9): xmas_tree_sale, emus_sold, ornamental_fish, bison_sale, aquatic_plants, grazing_rotation, producer_age_gro...
+[32mnum[39m (13): farm_acres, cropland_acres, irrigated_acres, crop_totals_sales_measured_in, farm_income_1, fertilizer_use,..."
+"2","
+[36mi[39m Use `spec()` to retrieve the full column specification for this data.
+[36mi[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"0","df0 <- df0 |> "
+"0","  clean_names()"
+"0",""
+"0","df <- df0 |> "
+"0","  select(c(farm_income_1, fertilizer_use, grazing_rotation, bee_colonies, population, county_acreage_2000, farm_acres))"
+"0",""
+"0","df1 <- df |> "
+"0","  mutate(pop_dens = population/county_acreage_2000)"
+"0",""

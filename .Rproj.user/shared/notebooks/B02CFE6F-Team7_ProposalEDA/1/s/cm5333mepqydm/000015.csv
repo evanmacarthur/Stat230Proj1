@@ -1,0 +1,5 @@
+"0","df3 <- df3 |> "
+"0","  mutate(grazing_rotation_2 = log(grazing_rotation))"
+"0",""
+"0","gf_point(data = df3, farm_income_2 ~ grazing_rotation_2) |> "
+"0","  gf_lm()"

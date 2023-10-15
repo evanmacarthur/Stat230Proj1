@@ -1,0 +1,2 @@
+"0","gf_point(data = df3, farm_income_2 ~ farm_acres) |> "
+"0","  gf_lm()"

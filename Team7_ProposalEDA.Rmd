@@ -13,22 +13,13 @@ output:
 # This loads the mosaic and mosaicData packages
 library(mosaic)
 library(car)
-library(rjson)
-library(jsonlite)
 library(httr)
 library(tidyverse)
-library(glue)
-library(purrr)
-library(janitor)
-library(rvest)
-library(robotstxt)
-library(hablar)
-library(utils)
 library(dplyr)
-library(states)
 library(tigris)
 library(GGally)
 library(readr)
+library(janitor)
 ```
 
 ```{r include=FALSE}
@@ -64,9 +55,6 @@ Our response variable in reported farm income, and we are planning to predict it
 
 On RStudio, be sure to save your dataset file in *the SAME folder* you saved this RMD file. I would strongly suggest that you create a specific folder on RStudio for this Project. When you wrangle your data, keep in mind that it's usually safer to save the mutated/filtered dataset as a *new* dataset.     
 
-```{r}
-
-```
 
 ```{r import data select columsn and calculate}
 ## wrangle!!  
@@ -89,9 +77,6 @@ Explore distributions and associations graphically and numerically.
 
 ```{r ggpairs, message=FALSE}
 ggpairs(df1, columns = 1:8, progress = FALSE)
-
-ggplot(data = df1, aes(x = farm_income_1))+
-  geom_histogram()
 #looks like farm income could maybe use a transformation to improve linearity. 
 ```
 > There are significant correlations with all variables, but the linearity looks pretty bad, will try some transformations. 
@@ -229,24 +214,35 @@ gf_point(data = df3, farm_income_2 ~ bee_colonies_2) |>
 gf_histogram(data = df3, ~ bee_colonies_2)
 favstats(~bee_colonies_2, data=df3)
 ```
->
+> After transforming the data, the histogram looks somewhat better, the main part of the distribution is very normal, but we have introduced a large number of 0s into the dataset, which represent real values, so probably shouldn't be removed. the mean is 4.1501	the median is 4.5433 and the IQR is 2.4136. The scatter plot similarlly seems to show a fairly linear relationship aside from a large number of 0 values. 
 
 
 
 ```{r grazing rotation}
 gf_point(data = df3, farm_income_2 ~ grazing_rotation) |> 
   gf_lm()
+gf_histogram(data = df3, ~ grazing_rotation)
+favstats(~grazing_rotation, data=df3)
 
 #looks a little problematic, give something a shot
 
+
+#looks maybe a little better I guess
+```
+> Again, a right skewed distribution, and unhelpful scatter plot for assessing linearity. The mean is 87.426, the median is 63, and the IQR is 80. worth trying a transformation. 
+
+```{r grazing rotation transformation}
 df3 <- df3 |> 
   mutate(grazing_rotation_2 = log(grazing_rotation))
 
 gf_point(data = df3, farm_income_2 ~ grazing_rotation_2) |> 
   gf_lm()
-#looks maybe a little better I guess
+gf_histogram(data = df3, ~ grazing_rotation_2)
+favstats(~grazing_rotation_2, data=df3)
 ```
+>The scatter plot looks about the same, but the histogram looks much less skewed, the mean is 4.0537, the median is 4.1431, and the IQR is 1.2309.
 
+> After we have tried to improve all of the response variables, lets take a look at the ggpairs again
 
 ```{r ggpairs again}
 df4 <- df3 |> 
@@ -254,11 +250,4 @@ df4 <- df3 |>
 ggpairs(df4, columns = 1:6, progress = FALSE)
 ```
 
-
-
-
-
-
-
-
-
+> These generally look much better, we still have a lot of 0 values in the population density, but they are real, so the data is not actually normally distributed. The scatter plots generally look much more linear than before transforming the variables, and the correlations are similar to before transforming. 

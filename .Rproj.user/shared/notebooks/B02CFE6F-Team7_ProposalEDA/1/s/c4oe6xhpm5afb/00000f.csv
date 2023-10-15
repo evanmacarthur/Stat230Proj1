@@ -1,0 +1,3 @@
+"0","df4 <- df3 |> "
+"0","  select(c(farm_income_2, farm_acres_2, pop_dens_2, grazing_rotation_2, fertilizer_use_2, bee_colonies_2))"
+"0","ggpairs(df4, columns = 1:6, progress = FALSE)"

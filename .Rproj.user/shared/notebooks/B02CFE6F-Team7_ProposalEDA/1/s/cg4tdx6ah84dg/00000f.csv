@@ -1,0 +1,5 @@
+"0","df3 <- df3 |> "
+"0","  mutate(bee_colonies_2 = log(bee_colonies+1))"
+"0",""
+"0","gf_point(data = df3, farm_income_2 ~ bee_colonies_2) |> "
+"0","  gf_lm()"

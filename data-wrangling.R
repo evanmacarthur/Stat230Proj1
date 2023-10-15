@@ -202,10 +202,10 @@ us_counties <- left_join(county_list,
 
 # join us_counties with land_area 
 full_county_list <- inner_join(us_counties,
-                              land_area,
-                              by = c("county_code",
-                                     "county",
-                                     "state")) %>% 
+                               land_area,
+                               by = c("county_code",
+                                      "county",
+                                      "state")) %>% 
   # select relevant columns
   select(c(county_code,
            county,
@@ -225,27 +225,6 @@ countyag <- agcensus %>%
   filter(!COUNTY_CODE == "NULL") %>% 
   select(!c(CENSUS_CHAPTER, CENSUS_TABLE, CENSUS_ROW, 
             CENSUS_COLUMN, STATE_FIPS_CODE, STATE_ALPHA))
-
-#countyag$VALUE <- as.numeric(gsub(",","", countyag$VALUE))
-
-
-
-#picking out a few columns
-#fertilizer <- countyag |> 
-#  filter(str_detect(SHORT_DESC, "FERTILIZER")) |> 
-#  filter(is.na(DOMAINCAT_DESC)) |> 
-#  distinct() |> 
-#  mutate(VALUE = ifelse(VALUE == "(D)", 0, VALUE),
-#        state_lower = tolower(STATE_NAME))
-
-
-
-
-
-
-               #START HERE
-
-
 
 
 #need to important countyag dataset before you get started here
@@ -305,7 +284,7 @@ df1 <- projdf2 |>
   clean_names()
 
 
-#you will need to make a lot of changes here as well, this renames each of variable names to be less shitty
+#you will need to make a lot of changes here as well, this renames each of variable names to be less bad
 df1 <- df1 |> 
   rename("farm_acres" = farm_operations_acres_operated) |> 
   rename("cropland_acres" = ag_land_cropland_acres) |> 
@@ -380,166 +359,6 @@ df3 <- df3 |>
 #not a bad idea to do a write_csv/write.csv for this result so that you only have to run the wrangling once between the 4 of your
 
 
-
-
-
 write_csv(df3, 'C:\\Users\\emaca\\Desktop\\gooddata.csv')
-
-
-
-
-
-
-
-
-
-#food_county <- firms_wider %>% 
-  # Merge with county data
-#  full_join(full_county_list,
-#             by = c("state_lower", "county_code")) %>% 
-  # Merge with ag census data
-#  full_join(cropland_final,
-#             by = c("state_lower", "county_code")) %>% 
-#  full_join(threecropsales,
-#            by = c("state_lower", "county_code")) %>% 
-  # Drop NA counties 
-#  drop_na(county.y) %>% 
-  # Parse number from operations
- # mutate(operations = parse_number(operations)) %>% 
-  # Select relevant columns
-#  select(county_code, 
-         # Keep only full county list county and state columns
-#         county.y, 
-#         state.y, 
-#         county_acreage_2000,
-#         population,
-#         food_and_beverage_stores, 
-#         food_services_and_drinking_places,
-#         ag_acreage,
-#         operations,
-#         Corn,
-##         Wheat,
-#         Soybeans,
-#         DOLLARS) %>% 
-  # Rename state.x and county.x
-#  rename(state = state.y,
-#         county = county.y)
-
-# Create separate dataframe 
-#food_map_merged <- inner_join(big_map_merged,
-#                             food_county,
-#            by = c("state", "county_code")) %>%
-#  select(c(statefp,
-#           county_code,
-#           county.x,
-#           state,
-#           state_lower,
-#           population.x,
-#           food_and_beverage_stores,
-#           food_services_and_drinking_places,
-#           county_acreage_2000.x,
-#           ag_acreage,
-#           operations,
-#           countyns,
-#           affgeoid,
-#           geoid,
-#           namelsad,
-#           stusps,
-#           lsad,
-#           aland,
-#           awater,
-#           geometry)) %>%
-#  rename(state_code = statefp,
-#         county = county.x,
-#         population = population.x,
-#         county_acreage_2000 = county_acreage_2000.x,
-#         state_abbr = stusps)
-
-# Calculations added to food_map_merged ====
-# proportion of stores per 100 people in each county
-#food_map_merged <- food_map_merged %>% 
-#  mutate(store_pop_prop = round((food_and_beverage_stores / population)*100, 3),
-#        ag_land_prop = round((ag_acreage / county_acreage_2000), 3),
-#         # convert NAs to zeroes
-#         store_pop_prop = coalesce(store_pop_prop, 0),
-#         ag_land_prop = coalesce(ag_land_prop, 0))
-
-# Get rid of Inf value
-#food_map_merged <- food_map_merged %>%
-#  filter(ag_land_prop != Inf)
-
-# County name frequency ====
-#wc_df <- food_county %>% 
-#  select(county) %>% 
-#  mutate(val = 1) %>% 
-#  group_by(county) %>% 
-#  summarize(sum = sum(val)) %>% 
-#  arrange(desc(sum)) %>% 
-#  head(50)
-
-
-# Save datasets ================================================================
-
-# Check if subfolders exist; if not, create them
-#if (!dir.exists("the-state-of-food/data")) {
-#  dir.create("the-state-of-food/data")
-#}
-
-# Save all cleaned data frames in a single .RData file in Shiny app *data* folder
-#save(food_county,
-#     food_map_merged,
-#     wc_df,
-#     file = "the-state-of-food/data/county-food.RData")
-
-
-
-
-## BRING BACK INTO RMD AFTER SUBMITTING
-```{r trying to fit a model}
-#df1 <- df |> 
-#  mutate(age = cut(producer_age_group, breaks = c(-Inf,20,30,40,50,60,70,Inf))
-
-lm1 <- lm(data = df1, farm_income_1 ~ pop_dens + age + farm_acres + bee_colonies + grazing_rotation + fertilizer_use)
-msummary(lm1)
-vif(lm1)
-#looks good!
-mplot(lm1, which = 1)
-mplot(lm1, which = 2)
-mplot(lm1, which = 3)
-mplot(lm1, which = 5)
-
-
-ggplot(data = df1, aes(x = farm_income_1))+
-  geom_histogram()
-```
-
-
-```{r}
-
-
-ggplot(data = df2, aes(x = farm_income_2))+
-  geom_histogram(bins = 50)
-
-lm2 <- lm(data = df2, farm_income_2 ~ pop_dens + farm_acres + bee_colonies + grazing_rotation + fertilizer_use)
-msummary(lm2)
-
-mplot(lm2, which = 1)
-mplot(lm2, which = 2)
-mplot(lm2, which = 3)
-mplot(lm2, which = 5)
-
-
-
-```
-> These look much better
-
-
-```{r probably not helpful but fun}
-df3 <- df2[c(395,1026,1653),]
-
-ggplot(data = df2, aes(x = bee_colonies, y = farm_income_2))+
-  geom_point()+
-  geom_point(data = df3, aes(x = bee_colonies, y = farm_income_2), color = "red")
-```
 
 

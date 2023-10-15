@@ -1,0 +1,3 @@
+"0",""
+"0","ggplot(data = df1, aes(x = farm_income_1))+"
+"0","  geom_histogram()"
