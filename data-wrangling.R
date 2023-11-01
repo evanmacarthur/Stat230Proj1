@@ -42,16 +42,16 @@ county_list <- county_wiki %>%
            c("county",
              "bracket"),
            "\\[") %>% 
-  select(-c(bracket)) %>% 
+  dplyr::select(-c(bracket)) %>% 
   # rename columns to simpler names
   rename(population = population_2020_census,
          state = state_or_equivalent) %>% 
   mutate(new_state = gsub("ʻ", "", state)) %>% 
-  select(-c(state)) %>% 
+  dplyr::select(-c(state)) %>% 
   rename(state = new_state) %>% 
   # turn population into a numeric value
   mutate(new_pop = parse_number(population)) %>% 
-  select(-population) %>% 
+  dplyr::select(-population) %>% 
   rename(population = new_pop)
 
 # filter out US territories, as this will not be part of our data analysis
@@ -71,22 +71,22 @@ county_list <- county_list %>%
            c("county",
              "bracket"),
            ",.*") %>% 
-  select(-bracket) %>%  
+  dplyr::select(-bracket) %>%  
   separate(county,
            c("county",
              "bracket"),
            " Parish") %>% 
-  select(-bracket) %>% 
+  dplyr::select(-bracket) %>% 
   separate(county,
            c("county",
              "bracket"),
            " Borough") %>% 
-  select(-bracket) %>% 
+  dplyr::select(-bracket) %>% 
   separate(county,
            c("county",
              "bracket"),
            " Census Area") %>% 
-  select(-bracket)
+  dplyr::select(-bracket)
 
 # now, county codes need to be scraped
 # assign url as county_code_wiki
@@ -111,18 +111,18 @@ county_code_list <- county_code_wiki %>%
            c("county",
              "bracket"),
            " County") %>% 
-  select(-bracket) %>% 
+  dplyr::select(-bracket) %>% 
   # get rid of all text after comma in county
   separate(county,
            c("county",
              "bracket"),
            ",.*") %>% 
-  select(-bracket) %>% 
+  dplyr::select(-bracket) %>% 
   separate(county,
            c("county",
              "bracket"),
            "\\[") %>% 
-  select(-bracket) %>% 
+  dplyr::select(-bracket) %>% 
   # convert FIPS code to character so I can use substr()
   clean_names() %>% 
   convert(chr(fips))
@@ -136,20 +136,20 @@ county_code_list <- county_code_list %>%
            c("county",
              "bracket"),
            " Parish") %>% 
-  select(-c(bracket)) %>% 
+  dplyr::select(-c(bracket)) %>% 
   mutate(new_state = gsub("ʻ", "", state)) %>% 
-  select(-c(state)) %>% 
+  dplyr::select(-c(state)) %>% 
   rename(state = new_state) %>% 
   separate(county,
            c("county",
              "bracket"),
            " Borough") %>% 
-  select(-bracket) %>% 
+  dplyr::select(-bracket) %>% 
   separate(county,
            c("county",
              "bracket"),
            " Census Area") %>% 
-  select(-bracket)
+  dplyr::select(-bracket)
 
 # now get land area per county
 # create dataframe to join datasets
@@ -167,7 +167,7 @@ land_area <- land_area %>%
   mutate(three_digit_code = substr(county_code, 3, 5)) %>% 
   # convert land area from square miles to acres
   mutate(county_acreage_2000 = land_area_sq_mi_2000 * 640) %>% 
-  select(-c(county_code,
+  dplyr::select(-c(county_code,
             land_area_sq_mi_2000)) %>% 
   separate(area_name,
            into = c("county",
@@ -180,7 +180,7 @@ land_area <- left_join(land_area,
 
 land_area <- land_area %>% 
   # select relevant columns 
-  select(c(county,
+  dplyr::select(c(county,
            abbr,
            state,
            three_digit_code,
@@ -194,7 +194,7 @@ us_counties <- left_join(county_list,
   # add in lowercase state column for joining
   mutate(state_lower = tolower(state)) %>% 
   # select relevant columns
-  select(c(county_code,
+  dplyr::select(c(county_code,
            county,
            state,
            population,
@@ -207,7 +207,7 @@ full_county_list <- inner_join(us_counties,
                                       "county",
                                       "state")) %>% 
   # select relevant columns
-  select(c(county_code,
+  dplyr::select(c(county_code,
            county,
            state,
            population,
@@ -223,7 +223,7 @@ agcensus <- read_tsv("raw-data/2017_cdqt_data.tsv")
 # remove null county codes
 countyag <- agcensus %>% 
   filter(!COUNTY_CODE == "NULL") %>% 
-  select(!c(CENSUS_CHAPTER, CENSUS_TABLE, CENSUS_ROW, 
+  dplyr::select(!c(CENSUS_CHAPTER, CENSUS_TABLE, CENSUS_ROW, 
             CENSUS_COLUMN, STATE_FIPS_CODE, STATE_ALPHA))
 
 
@@ -238,7 +238,8 @@ View(categories)
 
 #temp df that is just selecting the variables you are interested in, replace everything in quotes with SHORT DESC that you are interested in
 projdf <- countyag |> 
-  filter(SHORT_DESC %in% c("FARM OPERATIONS - ACRES OPERATED", 
+  filter(SHORT_DESC %in% c("FARM OPERATIONS - ACRES OPERATED",
+                           "FARM OPERATIONS - NUMBER OF OPERATIONS",
                            "AG LAND, CROPLAND - ACRES", 
                            "AG LAND, IRRIGATED - ACRES",
                            "CROP TOTALS - SALES, MEASURED IN $",
@@ -271,7 +272,7 @@ projdf <- countyag |>
 
 #selects only columns that you need, can add more, but really no reason to change this
 projdf <- projdf |> 
-  select(c(VALUE, COUNTY_NAME, COUNTY_CODE, STATE_NAME))
+  dplyr::select(c(VALUE, COUNTY_NAME, COUNTY_CODE, STATE_NAME))
 
 #makes a new df in order to pivot, this is a very important step because it turns the SHORT DESC column with many options for rows
 #into multiple columns. the pivot function is super powerful, but can be a bit. 
@@ -335,7 +336,7 @@ df2 <- df2 |>
 
 #this takes out some extraction columns
 df2 <- df2 |> 
-  select(!c(state.y, county.y, state_name, state.x))
+  dplyr::select(!c(state.y, county.y, state_name, state.x))
 
 #ok so there is been a bit of persistent issue with alaska and forget exactly why, I think it had to do with not using counties
 df3 <- df2 |> 
@@ -343,7 +344,7 @@ df3 <- df2 |>
 
 #removes more extra columns columns
 df3 <- df3 |> 
-  select(!c(county_name, abbr))
+  dplyr::select(!c(county_name, abbr))
 
 #renames one last column
 df3 <- df3 |> 

@@ -20,6 +20,10 @@ library(tigris)
 library(GGally)
 library(readr)
 library(janitor)
+library(car)
+library(MASS)
+library(leaps)
+library(kableExtra)
 ```
 
 ```{r include=FALSE}
@@ -61,12 +65,26 @@ On RStudio, be sure to save your dataset file in *the SAME folder* you saved thi
 df0 <- read_csv("gooddata.csv")
 df0 <- df0 |> 
   clean_names()
+df0 <- df0 |> 
+  rename("num_operations" = farm_operations_number_of_operations)
 
 df <- df0 |> 
-  select(c(farm_income_1, fertilizer_use, grazing_rotation, bee_colonies, population, county_acreage_2000, farm_acres))
+  dplyr::select(c(farm_income_1, num_operations, fertilizer_use, grazing_rotation, bee_colonies, population, county_acreage_2000, farm_acres))
 
 df1 <- df |> 
   mutate(pop_dens = population/county_acreage_2000)
+
+df1 <- df1 |> 
+  mutate(fertilizer_use = fertilizer_use/num_operations) |> 
+  mutate(grazing_rotation = grazing_rotation/num_operations) |> 
+  mutate(bee_colonies = bee_colonies/num_operations) |> 
+  mutate(farm_acres = farm_acres/num_operations)
+
+df1 <- df1 |> 
+  dplyr::select(!c(num_operations, county_acreage_2000))
+
+df1 <- df1 |> 
+  filter(!is.infinite(pop_dens))
 
 ```
 
@@ -76,17 +94,17 @@ df1 <- df |>
 Explore distributions and associations graphically and numerically.
 
 ```{r ggpairs, message=FALSE}
-ggpairs(df1, columns = 1:8, progress = FALSE)
+ggpairs(df1, columns = 1:7, progress = FALSE)
 #looks like farm income could maybe use a transformation to improve linearity. 
 ```
-> There are significant correlations with all variables, but the linearity looks pretty bad, will try some transformations. 
+> There are significant correlations with all variables, but the linearity looks pretty bad, will try some transformations.
 
 ```{r farm income}
 gf_histogram(~farm_income_1, data=df1)
 
 favstats(~farm_income_1, data=df1)
 ```
->The mean is 46841, the median is 27146, we can also tell it looks right skewed from the histogram, and the IQR is 61407
+>The mean is 46857, the median is 27177, we can also tell it looks right skewed from the histogram, and the IQR is 61419
 
 ```{r fixing farm income}
 df2 <- df1 |> 
@@ -104,7 +122,7 @@ favstats(~farm_income_2, data=df2)
 
 
 ```{r ggpairs with transformed farm income, fig.height=6, fig.width=6}
-ggpairs(df2, columns = 1:8, progress = FALSE)
+ggpairs(df2, columns = 2:8, progress = FALSE)
 ```
 
 >This improved linearity slightly, but still questionable, lets look at predictors. 
@@ -120,7 +138,7 @@ favstats(~fertilizer_use, data=df2)
 
 #fertilizer use is super right skewed and not linear w/ farm income, so trying a transformation
 ```
->This does not look great, heavily skewed distribution and it is difficult to assess the scatterplot, the mean is 7664465, the median is 3679500, and the IQR is 9724500. Will try transforming. 
+>This does not look great, heavily skewed distribution and it is difficult to assess the scatterplot, the mean is 12600, the median is 6182, and the IQR is 16406. Will try transforming. 
 
 ```{r transformed fertilizer}
 df3 <- df2 |> 
@@ -133,7 +151,7 @@ gf_histogram(~fertilizer_use_2, data=df3)
 favstats(~fertilizer_use_2, data=df3)
 
 ```
->Once again, this improves how the data looks. The distribution is still somewhat right skewed, with a mean of 2260.6	and a median of 1918.2, and an IQR of 2268.9, but this is an improvement, but linearity looks better based on the scatterplot. 
+>Once again, this improves how the data looks. The distribution is still somewhat right skewed, with a mean of 94.397	and a median of 78.628, and an IQR of 90.167, but this is an improvement, but linearity looks better based on the scatterplot. 
 
 
 ```{r population density}
@@ -145,7 +163,7 @@ favstats(~pop_dens, data=df3)
 
 #population density is super right skewed and not linear w/ farm income, so trying a transformation
 ```
-> This one is also not great, scatterplot not very useful, the histogram is right skewed, the mean is 0.29915 and median is 0.064434, and the IQR is 0.14179.  
+> This one is also not great, scatterplot not very useful, the histogram is right skewed, the mean is 0.29922 and median is 0.064434, and the IQR is 0.14181.  
 
 
 ```{r population density transform}
@@ -165,7 +183,7 @@ gf_point(data = df3, farm_income_2 ~ pop_dens_2) |>
 
 favstats(~pop_dens_2, data=df3)
 ```
->This one still does not look great after transforming, but it probably helped. The graph is still right skewed, but not as strongly, with a mean of 0.16482 and a median of 0.062443, and IQR of 0.1296, and the relationship based on the scatter plot is not very useful. 
+>This one still does not look great after transforming, but it probably helped. The graph is still right skewed, but not as strongly, with a mean of 0.16477 and a median of 0.062443, and IQR of 0.12962, and the relationship based on the scatter plot is not very useful. 
 
 
 
@@ -190,7 +208,7 @@ gf_histogram(data = df3, ~ farm_acres_2)
 favstats(~farm_acres_2, data=df3)
 #looks better, but still pretty questionable
 ```
->This transformation improved it somewhat, the histogram is less right skewed, but the relationship does not look very linear based on the scatter plot, the mean is 468.11 and the median is 423.45, and the IQR is 321.57
+>This transformation improved it somewhat, the histogram is less right skewed, but the relationship does not look very linear based on the scatter plot, the mean is 20.833 and the median is 16.353, and the IQR is 10.446
 
 
 
@@ -203,7 +221,7 @@ favstats(~bee_colonies, data=df3)
 #bee colonies is super right skewed and not linear w/ farm income, so trying a transformation
 #again, much improved
 ```
-> Very strongly right skewed histogram, scatterplot is not useful for assessing linearity, the mean is 848.12, the median is 93, and the IQR is 234
+> Very strongly right skewed histogram, scatterplot is not useful for assessing linearity, the mean is 1.1837, the median is 0.16083, and the IQR is 0.35789
 
 ```{r bee colonies transform}
 df3 <- df3 |> 
@@ -224,30 +242,45 @@ gf_point(data = df3, farm_income_2 ~ grazing_rotation) |>
 gf_histogram(data = df3, ~ grazing_rotation)
 favstats(~grazing_rotation, data=df3)
 
-#looks a little problematic, give something a shot
-
-
-#looks maybe a little better I guess
+#looks pretty good actually
 ```
-> Again, a right skewed distribution, and unhelpful scatter plot for assessing linearity. The mean is 87.426, the median is 63, and the IQR is 80. worth trying a transformation. 
-
-```{r grazing rotation transformation}
-df3 <- df3 |> 
-  mutate(grazing_rotation_2 = log(grazing_rotation))
-
-gf_point(data = df3, farm_income_2 ~ grazing_rotation_2) |> 
-  gf_lm()
-gf_histogram(data = df3, ~ grazing_rotation_2)
-favstats(~grazing_rotation_2, data=df3)
-```
->The scatter plot looks about the same, but the histogram looks much less skewed, the mean is 4.0537, the median is 4.1431, and the IQR is 1.2309.
+> This distribution looks pretty good. Relatively normal histogram, and the scatter plot shows a relatively linear relationship. mean is 0.13218, median is 0.12806 and IQR is 0.08744
 
 > After we have tried to improve all of the response variables, lets take a look at the ggpairs again
 
 ```{r ggpairs again}
 df4 <- df3 |> 
-  select(c(farm_income_2, farm_acres_2, pop_dens_2, grazing_rotation_2, fertilizer_use_2, bee_colonies_2))
+  dplyr::select(c(farm_income_2, farm_acres_2, pop_dens_2, grazing_rotation, fertilizer_use_2, bee_colonies_2))
+df4 <- na.omit(df4)
 ggpairs(df4, columns = 1:6, progress = FALSE)
+
 ```
 
-> These generally look much better, we still have a lot of 0 values in the population density, but they are real, so the data is not actually normally distributed. The scatter plots generally look much more linear than before transforming the variables, and the correlations are similar to before transforming. 
+> These generally look much better, we still have a lot of 0 values in the population density, but they are real, so the data is not actually normally distributed. The scatter plots generally look much more linear than before transforming the variables, and the correlations are similar to before transforming. Bee colonies is no longer correlated though
+
+```{r}
+best.sub <- regsubsets(farm_income_2 ~ farm_acres_2 + 
+                         pop_dens_2 + grazing_rotation_2 + fertilizer_use_2 + bee_colonies_2, data = df4)
+
+with(msummary(best.sub), data.frame(adjr2, cp, bic, rss, outmat))
+  #kable(digits = 3, booktabs = TRUE) %>%
+  #row_spec(row = 0, angle = 90)
+
+```
+
+```{r}
+mod.small <- lm(farm_income_2 ~ 1, data = df4)
+mod.all <- lm(farm_income_2 ~ farm_acres_2 + 
+                         pop_dens_2 + grazing_rotation_2 
+                         + fertilizer_use_2 + bee_colonies_2,
+                         data = df4)
+stepAIC(mod.small, scope = list(lower = mod.small, upper = mod.all), direction = "both", trace = FALSE)$anova
+```
+
+```{r}
+lm1 <- lm(farm_income_2 ~ fertilizer_use_2 + grazing_rotation_2 + pop_dens_2 + bee_colonies_2, data = df4)
+
+```
+
+
+

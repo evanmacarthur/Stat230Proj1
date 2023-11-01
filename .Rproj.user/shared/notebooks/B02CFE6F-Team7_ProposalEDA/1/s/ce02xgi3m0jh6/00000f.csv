@@ -1,5 +1,0 @@
-"0","df3 <- df3 |> "
-"0","  mutate(farm_acres_2 = sqrt(farm_acres))"
-"0",""
-"0","gf_point(data = df3, farm_income_2 ~ farm_acres_2) |> "
-"0","  gf_lm()"

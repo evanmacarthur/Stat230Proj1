@@ -1,3 +1,0 @@
-"0",""
-"0","gf_point(data = df3, farm_income_2 ~ pop_dens_2) |> "
-"0","  gf_lm()"
