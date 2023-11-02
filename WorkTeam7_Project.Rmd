@@ -3,11 +3,11 @@ title: 'STAT230 Work Team Project: Proposal & EDA'
 author: 'Work Team 7: Evan, Becca, Laith'
 date: "due Thursday, November 2nd"
 output:
-  html_document:
-    df_print: paged
   pdf_document:
     fig_height: 3
     fig_width: 5
+  html_document:
+    df_print: paged
 ---
 
 ```{r include=FALSE}
@@ -25,6 +25,7 @@ library(janitor)
 library(leaps)
 require(kableExtra)
 library(MASS)
+library(gridExtra)
 ```
 
 ```{r include=FALSE}
@@ -46,28 +47,20 @@ options(warn=-1)
 
 ## Introduction & Motivation  
 
-We are interested in how we can attempt to predict the profitability of farming by different farming practices. Specifically we are curious about sustainable agriculture decisions and decisions about crop types. From a conservationist perspective, it is important that sustainable choices are economically viable for farmers. 
-
+  We are interested in how we can attempt to predict the profitability of farms by different farming practices. Specifically we are curious about sustainable agriculture decisions and decisions about crop types. From a conservationist perspective, it is important that sustainable choices are economically viable for farmers. 
 https://www.nass.usda.gov/AgCensus/
 
-Our data is sourced from the United States Census of Agriculture, between the years 2009 and 2017, along with county demographic information from Wikipedia, sourced from the U.S Census. 
+  Our data is sourced from the United States Census of Agriculture, between the years 2009 and 2017, along with county demographic information from Wikipedia, sourced from the U.S Census. The data is collected by county, often summing the a variable across all operations in a given county. This limits our specificity, but we are still able to estimate what is typical for farms across the county by looking at averages for each county. 
 
-Our response variable in reported farm income, and we are planning to predict it with a number of variables (pop_density, farm acres, bee colonies, grazing rotation, fertilizer use)
+  Our response variable in reported farm income, and we are planning to predict it with a number of variables (population density, farm acres, bee colonies, grazing rotation, fertilizer use). 
+
+  Grazing rotation refers to the number of farming operations in a county that reported using either crop cycling or alternating patterns of grazing to minimize impact. Farm acres and bee colonies are counts that are summed across all farms within a state. Fertilizer use is the total dollar amount spent on fertilizers in that year by all farming operations in a given county. Population density was estimated based on county sizes and populations based on the U.S census via Wikipedia. We feel that this combination of predictors is appropriate because it examines many dimensions of farming practices. It includes information about context of the farming (population density, farm size) as well as the types of methods of sustainable or unsustainable practices carried out in each of these counties. It is valuable to understand how economically viable sustainable farming is in the short term in order to access if further supportive measures should be taken in order to ensure both sufficient food production, as well as producing that food in ways that will limit harm to the Earth. 
 
 
 ## Dataset & Wrangling   
 
-On RStudio, be sure to save your dataset file in *the SAME folder* you saved this RMD file. I would strongly suggest that you create a specific folder on RStudio for this Project. When you wrangle your data, keep in mind that it's usually safer to save the mutated/filtered dataset as a *new* dataset.     
-
-
-
-
-
-## Exploratory Data Analysis (EDA)
-
-Explore distributions and associations graphically and numerically.
-
-```{r import data select columns and calculate}
+The initial combining, and wrangling of this large data set can be found at https://github.com/evanmacarthur/Stat230Proj1. The data was then finished in appendix 1
+```{r import data select columns and calculate, include=FALSE}
 ## wrangle!!  
 df0 <- read_csv("gooddata.csv")
 df0 <- df0 |> 
@@ -95,20 +88,27 @@ df1 <- df1 |>
 
 ```
 
+## Exploratory Data Analysis (EDA)
 
-```{r ggpairs, message=FALSE}
+Explore distributions and associations graphically and numerically.
+
+```{r ggpairs, message=FALSE, fig.width=8, fig.height=5, fig.align='center', echo=FALSE}
 ggpairs(df1, columns = 1:7, progress = FALSE)
-#looks like farm income could maybe use a transformation to improve linearity. 
 ```
-> There are significant correlations with all variables, but the linearity looks pretty bad, will try some transformations.
+> There are significant correlations with all variables, but lots of these associations do not look linear. Transforming the data may help improve these relationships.
+
+
 
 ```{r farm income}
 gf_histogram(~farm_income_1, data=df1)
-
-favstats(~farm_income_1, data=df1)
+favstats(~farm_income_1, data=df1) |> 
+  kable(booktabs=TRUE, align = "c", caption = "Summary of Farm Income") |> 
+  kable_styling(position = "center")
 ```
 >The mean is 46857, the median is 27177, we can also tell it looks right skewed from the histogram, and the IQR is 61419
 
+
+We log-transposed+transformed farm income such that it better matched a normal distribution. 
 ```{r fixing farm income}
 df2 <- df1 |> 
   mutate(farm_income_2 = log(farm_income_1+55152))
@@ -117,8 +117,9 @@ df2 <- df1 |>
 df2 <- df2 |> 
   filter(farm_income_2 > 5)
 gf_histogram(~farm_income_2, data=df2)
-
-favstats(~farm_income_2, data=df2)
+favstats(~farm_income_2, data=df2) |> 
+  kable(booktabs = TRUE, align = 'c', caption = "Summary of Transformed Farm Income") |>
+  kable_styling(position = "center")
 ```
 >Looks much improved, the mean is 11.4, and median is 11.318, and the histogram still is not ideal, but better. The IQR = 0.699
 
@@ -137,7 +138,9 @@ gf_point(data = df2, farm_income_2 ~ fertilizer_use) |>
   gf_lm()
 gf_histogram(~fertilizer_use, data=df2)
 
-favstats(~fertilizer_use, data=df2)
+favstats(~fertilizer_use, data=df2) |> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 
 #fertilizer use is super right skewed and not linear w/ farm income, so trying a transformation
 ```
@@ -151,7 +154,9 @@ gf_point(data = df3, farm_income_2 ~ fertilizer_use_2) |>
   gf_lm()
 gf_histogram(~fertilizer_use_2, data=df3)
 
-favstats(~fertilizer_use_2, data=df3)
+favstats(~fertilizer_use_2, data=df3) |> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 
 ```
 >Once again, this improves how the data looks. The distribution is still somewhat right skewed, with a mean of 94.397	and a median of 78.628, and an IQR of 90.167, but this is an improvement, but linearity looks better based on the scatterplot. 
@@ -162,7 +167,9 @@ gf_point(data = df3, farm_income_2 ~ pop_dens) |>
   gf_lm()
 gf_histogram(~pop_dens, data=df3)
 
-favstats(~pop_dens, data=df3)
+favstats(~pop_dens, data=df3) |> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 
 #population density is super right skewed and not linear w/ farm income, so trying a transformation
 ```
@@ -184,7 +191,9 @@ gf_histogram(data = df3, ~ pop_dens_2, bins = 100)
 gf_point(data = df3, farm_income_2 ~ pop_dens_2) |> 
   gf_lm()
 
-favstats(~pop_dens_2, data=df3)
+favstats(~pop_dens_2, data=df3) |> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 ```
 >This one still does not look great after transforming, but it probably helped. The graph is still right skewed, but not as strongly, with a mean of 0.16477 and a median of 0.062443, and IQR of 0.12962, and the relationship based on the scatter plot is not very useful. 
 
@@ -194,7 +203,9 @@ favstats(~pop_dens_2, data=df3)
 gf_point(data = df3, farm_income_2 ~ farm_acres) |> 
   gf_lm()
 gf_histogram(data = df3, ~ farm_acres)
-favstats(~farm_acres, data=df3)
+favstats(~farm_acres, data=df3) |> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 
 #farm acres is super right skewed and not linear w/ farm income, so trying a transformation
 ```
@@ -208,7 +219,9 @@ df3 <- df3 |>
 gf_point(data = df3, farm_income_2 ~ farm_acres_2) |> 
   gf_lm()
 gf_histogram(data = df3, ~ farm_acres_2)
-favstats(~farm_acres_2, data=df3)
+favstats(~farm_acres_2, data=df3) |> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 #looks better, but still pretty questionable
 ```
 >This transformation improved it somewhat, the histogram is less right skewed, but the relationship does not look very linear based on the scatter plot, the mean is 20.833 and the median is 16.353, and the IQR is 10.446
@@ -219,7 +232,9 @@ favstats(~farm_acres_2, data=df3)
 gf_point(data = df3, farm_income_2 ~ bee_colonies) |> 
   gf_lm()
 gf_histogram(data = df3, ~ bee_colonies)
-favstats(~bee_colonies, data=df3)
+favstats(~bee_colonies, data=df3)|> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 
 #bee colonies is super right skewed and not linear w/ farm income, so trying a transformation
 #again, much improved
@@ -233,7 +248,9 @@ df3 <- df3 |>
 gf_point(data = df3, farm_income_2 ~ bee_colonies_2) |> 
   gf_lm()
 gf_histogram(data = df3, ~ bee_colonies_2)
-favstats(~bee_colonies_2, data=df3)
+favstats(~bee_colonies_2, data=df3)|> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 ```
 > After transforming the data, the histogram looks somewhat better, the main part of the distribution is very normal, but we have introduced a large number of 0s into the dataset, which represent real values, so probably shouldn't be removed. the mean is 4.1501	the median is 4.5433 and the IQR is 2.4136. The scatter plot similarlly seems to show a fairly linear relationship aside from a large number of 0 values. 
 
@@ -243,7 +260,9 @@ favstats(~bee_colonies_2, data=df3)
 gf_point(data = df3, farm_income_2 ~ grazing_rotation) |> 
   gf_lm()
 gf_histogram(data = df3, ~ grazing_rotation)
-favstats(~grazing_rotation, data=df3)
+favstats(~grazing_rotation, data=df3)|> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 
 #looks pretty good actually
 ```
@@ -269,7 +288,7 @@ ggpairs(df4, columns = 1:6, progress = FALSE)
 best.sub <- regsubsets(farm_income_2 ~ farm_acres_2 + pop_dens_2 + grazing_rotation + fertilizer_use_2 + bee_colonies_2, data = df4)
 names(msummary(best.sub))
 with(msummary(best.sub), data.frame(adjr2, cp, bic, rss, outmat)) %>%   
-  kable(digits = 3, booktabs = TRUE) %>%
+  kable(digits = 3, booktabs = TRUE, align = 'c') %>%
   row_spec(row = 0, angle = 90)
 
 mod.small <- lm(farm_income_2 ~ 1, data = df4)
@@ -298,11 +317,13 @@ The Linearity condition is mostly met as there is mostly symmetry over the line 
 
 
 Compare conditions and fit to untransformed model
-```{r}
+```{r, include=FALSE, fig.show='hide'}
+#actual code for this is in appendix
 fmA2 <- lm(farm_income_1 ~ pop_dens + grazing_rotation + fertilizer_use + farm_acres, data = df3)
-mplot(fmA2, which = 1)
-mplot(fmA2, which = 2)
-gf_dhistogram(~ residuals(fmA2))
+Pa1 <- mplot(fmA2, which = 1)
+Pa2 <- mplot(fmA2, which = 2)
+Pa3 <- gf_dhistogram(~ residuals(fmA2))
+grid.arrange(Pa1, Pa2, Pa3, ncol = 3)
 ```
 >Conditions are definitely worse in the untransformed model. The data is even more skewed, with many extreme residual values that disrupt normality and equal variance. Therefore, it looks like our transformations were helpful, even if they didn't completely fix the data to fit modeling conditions.
 
@@ -504,7 +525,7 @@ msummary(fmC)
 
 Overall, our final model fmA3, indicates that 54.2% of the variability in farm_income_2 can be explained by the multiple linear relationship between farm_income_2 and pop_dens_2, grazing_rotation, fertilizer_use_2, and farm_acres_2. 
 
-This model indicates that average farm income in a county increases with increasing population density, proportion of farms that use grazing rotations, average fertilizer use, and average farm size. Specifically, average farm income increases by $0.31 for every 1 person/acre density increase; farm income increases by $0.05 for every 10% increase in the percent of farms that use grazing rotations; farm income increases by $1.00 for every 1 unit increase in average farm fertilizer application; and farm income increases by $1.00 for every 1 acre increase in average farm size. That is, counties with bigger farms that use more fertilizer, counties with more farms that use grazing rotations, and counties with large population densities are likely to contain more profitable farms.
+This model indicates that average farm income in a county increases with increasing population density, proportion of farms that use grazing rotations, average fertilizer use, and average farm size. Specifically, average farm income increases by $0.31 for every 1 person/acre density increase; farm income increases by $0.05 for every 10% increase in the percent of farms that use grazing rotations; farm income increases by $1.00 for every $1 increase in average farm fertilizer expenditure; and farm income increases by $1.00 for every 1 acre increase in average farm size. That is, counties with bigger farms that use more fertilizer, counties with more farms that use grazing rotations, and counties with large population densities are likely to contain more profitable farms.
 
 ```{r reverse transform}
 #population density
@@ -530,6 +551,62 @@ sqrt(fertilizer)
 log(pop density)
 sqrt(farm area)
 
+
+## Appendices
+
+
+###Appendix 1
+
+```{r wrangling good ag data, eval=FALSE}
+df0 <- read_csv("gooddata.csv")
+df0 <- df0 |> 
+  clean_names()
+df0 <- df0 |> 
+  rename("num_operations" = farm_operations_number_of_operations)
+
+df <- df0 |> 
+  dplyr::select(c(farm_income_1, num_operations, fertilizer_use, grazing_rotation, bee_colonies, population, county_acreage_2000, farm_acres))
+
+df1 <- df |> 
+  mutate(pop_dens = population/county_acreage_2000)
+
+df1 <- df1 |> 
+  mutate(fertilizer_use = fertilizer_use/num_operations) |> 
+  mutate(grazing_rotation = grazing_rotation/num_operations) |> 
+  mutate(bee_colonies = bee_colonies/num_operations) |> 
+  mutate(farm_acres = farm_acres/num_operations)
+
+df1 <- df1 |> 
+  dplyr::select(!c(num_operations, county_acreage_2000))
+
+df1 <- df1 |> 
+  filter(!is.infinite(pop_dens))
+```
+
+
+###Appendix 2. Plots of observed vs theoretical values, and Q-Q plots for the initial three models
+
+```{r model checking for untransformed with everything accept bees, fig.width=7, fig.keep='last'}
+
+Pa1 <- mplot(fmA2, which = 1)
+Pa2 <- mplot(fmA2, which = 2)
+Pa3 <- gf_dhistogram(~ residuals(fmA2))
+grid.arrange(Pa1, Pa2, Pa3, ncol = 3)
+```
+
+###Appendix 3
+
+```{r conditions for full and full-bees, fig.width=7, fig.height=5, fig.keep='last'}
+Pa4 <- mplot(fmA, which = 1)
+Pa5 <- mplot(fmA, which = 2)
+Pa6 <- gf_dhistogram(~ residuals(fmA))
+
+Pa7 <- mplot(fmB, which = 1)
+Pa8 <- mplot(fmB, which = 2)
+Pa9 <- gf_dhistogram(~ residuals(fmB))
+
+grid.arrange(Pa4, Pa5, Pa6, Pa7, Pa8, Pa9, ncol = 3,  nrow = 2)
+```
 
 
 
