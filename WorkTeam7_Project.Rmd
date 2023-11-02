@@ -23,7 +23,7 @@ library(GGally)
 library(readr)
 library(janitor)
 library(leaps)
-require(kableExtra)
+library(kableExtra)
 library(MASS)
 library(gridExtra)
 ```
@@ -41,6 +41,8 @@ options(digits=5)
 
 theme_set(theme_bw())
 options(warn=-1)
+
+opts_chunk$set(echo=FALSE)
 ```
 
 
@@ -282,6 +284,7 @@ ggpairs(df4, columns = 1:6, progress = FALSE)
 > These generally look much better, we still have a lot of 0 values in the population density, but they are real, so the data is not actually normally distributed. The scatter plots generally look much more linear than before transforming the variables, and the correlations are similar to before transforming. Bee colonies is no longer correlated though
 > I removed missing values to make my following tests and operations easier.
 
+\newpage
 
 ## Model selection
 ```{r Variable Selection}
@@ -443,7 +446,9 @@ $H_A: \beta_{farm,acres,2} \neq 0$
 
 > Since the p-value of 0.59 is large, we fail to reject the null hypothesis and do not have enough evidence to conclude the alternative hypothesis that the predictor bee_colonies_2 is significant.
 
-```{r bootstrapping}
+## Bootstrapping
+
+```{r bootstrapping, include=FALSE}
 coef.actual<-fmB$coefficients["bee_colonies_2"] 
 
 #bootstrap
@@ -460,74 +465,81 @@ qtL <- qdata(std.bts, p = 0.025)
 qtL
 SE <- msummary(fmB)$coefficients["bee_colonies_2","Std. Error"]
 c(coef.actual - qtU*SE, coef.actual - qtL*SE)
+```
 
+>   Since the normality condition was not met for either model, we will test the significance of bee_colonies_2 using bootstrapping. We assumed that our bootstrapped distribution was nonnormal and skewed. The resulting 95% confidence interval for the coefficient of bee_colonies_2 is (-0.016319, 0.027324). Since this interval includes 0 (see figure below),we are not 95% confident that the bee_colonies_2 is not 0, and conclude that this predictor is not significant. 
+
+```{r fig.width=3, fig.length=3}
 gf_dens(~ bee_colonies_2, data = bootstrap) %>%
   gf_vline(xintercept = coef.actual, color = "cyan") |> 
-  gf_vline(xintercept = c(coef.actual - qtU*SE, coef.actual - qtL*SE), color = "red") 
+  gf_vline(xintercept = c(coef.actual - qtU*SE, coef.actual - qtL*SE), color = "red")
 ```
->Since the normality condition was not met for either model, we will test the significance of bee_colonies_2 using bootstrapping. The resulting 95% confidence interval for the coefficient of farm_acres_2 is ( -0.016319, 0.027324 ). Since this interval includes 0,we are not 95% confident that the bee_colonies_2 is not 0, and conclude that this predictor is not significant. 
 
->Final model comparison
+## Final evaluation of 4 and 5 term models
 
-```{r evaluating the models directly}
+```{r evaluating the models directly, include=FALSE}
 msummary(fmA)
 msummary(fmB)
 ```
->Conclude that we should use fmA: in addition to all the reasons above (bee colonies not significant in bootstrap test, no clear relationship with farm income in AV plot, insig nested f test, fewer points with high leverage, similar conditions), fmB, the model with bee colonies has the same adjusted R squared as fmA, the model without it.
+
+>   We conclude that fmA, the four term model is preferable to fmB, the five term model that includes bee colonies as a predictor. As described above, fmA and fmB have very similar deviations from model conditions. However, fmB has about 100 more points with high leverage than fmA, indicating that fmB has more potential to make inaccurate predictions than fmA. 
+  After controlling for the effects of the other four predictors, bee colonies has an insignificant effect on farm income, as indicated by a nested f test and individual coefficient t stat with p values of 0.59. We double checked this result with a bootstrap test since our model did not fit conditions, but still found that the effects of bee colonies on farm income were insignificant.
+    Furthermore, as we saw in our initial model selection process, fmA is a stronger model than fmB. Both models have an adjusted $R^2$ of 0.537, and fmA has lower AIC and Cp scores than fmB. Overall, we found no reasons why fmB is preferable and many reasons why fmA is preferable. We will therefore proceed with analyzing fmA.
 
 
 ##Outlier removal
-> One outlier, 1649, stands out in our equal variance plot and has the largest standard residual value in fmA. Let's try removing it and reassessing conditions.
 
-```{r remove outlier}
+>   One outlier, at index 1649, stands out in our equal variance plot and has the largest standard residual value in fmA. We tried removing it and reassessing conditions and model fit. See the appendix for our specific model results for this new model, fmA3. Removing this outlier decreased residual variance at the outlier's fitted value and taking out such an extreme value improved data normality. However, both equal variance and normality are still very questionable. 
+    Removing this outlier did slightly decrease the significance of pop_dens_2 (p = 1.1e-13 compared to 5.5e-14 with the outlier) and farm_acres_2 (p = 0.072 compared to 0.065 with the outlier). However, removing the outlier increased $R^2$ by 0.5%, from 0.537 to 0.542. Given that taking out this outlier improved model conditions and increased model strength slightly, and since the impacts on model significance were small and less important than improvement to model conditions, we decided that it made sense to leave the outlier out of our model.
+
+```{r remove outlier, include=FALSE}
 stresid <- rstandard(fmA)
 which.max(abs(stresid))
 df5 <- df4[-which.max(abs(stresid)),]
 ```
 
-```{r outlier conditions}
+```{r outlier conditions, include=FALSE}
 fmA3 <- lm(farm_income_2 ~ pop_dens_2 + grazing_rotation + fertilizer_use_2 + farm_acres_2, data = df5)
-mplot(fmA3, which = 1)
-mplot(fmA3, which = 2)
-gf_dhistogram(~ residuals(fmA3))
+Ot1<-mplot(fmA3, which = 1)
+Ot2<-mplot(fmA3, which = 2)
+Ot3<-gf_dhistogram(~ residuals(fmA3))
+grid.arrange(Ot1, Ot2, Ot3, ncol = 3,  nrow = 1)
 ```
->Normality and equal variance look better, although still very questionable
 
-
-```{r outlier comparison}
+```{r outlier comparison, include=FALSE}
 msummary(fmA)
 msummary(fmA3)
 ```
->adjusted $R^2$ increases by 0.5%
-
->Conclusion: we should remove this outlier
-
 
 ## Interactions
 
-```{r}
+>   Finally, we decided to test some interactions in our model. We specifically tested all interactions involving population density, since we thought that the population density of a county could modulate the effects of farm size and farming practices on farm income. For example, more populous counties might have more access to resources that would help them profitably employ fertilizer and grazing rotation practices.
+    See the appendix for specific model results for this model, fmC. We first checked the conditions of our model with these three interaction terms. Equal variance, normality, and linearity looked very similar to our model without interactions. Looking at model significance, we found that all three interactions were significant or close to significant: p=0.0561 for pop_dens_2:grazing_rotation; p=0.0274 for pop_dens_2:fertilizer_use_2; p=0.0199 for pop_dens_2:farm_acres_2. However, adding these interaction terms barely increased the overall strength of our model: $R^2$ adjusted changed from 0.542 to 0.543. Although these interactions are interesting and fairly significant, they are not strong predictors of farm income and do not improve model conditions. We decided not to include them in our final model in order to simplify our model. This allowed us to interpret the effects of individual predictors on farm income.
+
+```{r include=FALSE}
 fmC <- lm(farm_income_2 ~ pop_dens_2 + grazing_rotation + fertilizer_use_2 + farm_acres_2 + pop_dens_2:grazing_rotation + pop_dens_2:fertilizer_use_2 + pop_dens_2:farm_acres_2, data = df5)
 mplot(fmC, which = 1)
 mplot(fmC, which = 2)
 gf_dhistogram(~ residuals(fmC))
 ```
-> Conditions look about the same for the interaction model. 
 
-```{r model comparison}
+```{r model comparison, include=FALSE}
 msummary(fmA3)
 msummary(fmC)
 ```
-> Ideally, adj $R^2$ should increase by 2% per additional term, but it only increases by 0.001 when adding three interaction terms. Even though all of these interaction terms are significant, we choose not to include them because they do not notably improve model conditions or model strength, and they will make interpretation much more difficult.
-
->Final model: fmA3!
 
 ##Final Conclusion:
 
-Overall, our final model fmA3, indicates that 54.2% of the variability in farm_income_2 can be explained by the multiple linear relationship between farm_income_2 and pop_dens_2, grazing_rotation, fertilizer_use_2, and farm_acres_2. 
+>   Overall, our final model was fmA3, which has outlier 1649 removed and has no interaction terms. This model indicates that 54.2% of the variability in farm_income_2 can be explained by the multiple linear relationship between farm_income_2 and pop_dens_2, grazing_rotation, fertilizer_use_2, and farm_acres_2. Additionally, this model indicates that average farm income in a county increases with increasing population density, proportion of farms that use grazing rotations, average fertilizer use, and average farm size. Specifically, average farm income increases by $0.31 for every 1 person/acre density increase; farm income increases by $0.05 for every 10% increase in the percent of farms that use grazing rotations; farm income increases by $1.00 for every $1 increase in average farm fertilizer expenditure; and farm income increases by $1.00 for every 1 acre increase in average farm size. That is, counties with bigger farms that use more fertilizer, counties with more farms that use grazing rotations, and counties with large population densities are likely to contain more profitable farms.
 
-This model indicates that average farm income in a county increases with increasing population density, proportion of farms that use grazing rotations, average fertilizer use, and average farm size. Specifically, average farm income increases by $0.31 for every 1 person/acre density increase; farm income increases by $0.05 for every 10% increase in the percent of farms that use grazing rotations; farm income increases by $1.00 for every $1 increase in average farm fertilizer expenditure; and farm income increases by $1.00 for every 1 acre increase in average farm size. That is, counties with bigger farms that use more fertilizer, counties with more farms that use grazing rotations, and counties with large population densities are likely to contain more profitable farms.
+> Fitted model equation:
 
-```{r reverse transform}
+$$\widehat{farm income} =  61262 + 0.309(pop density) + 0.466(grazing rotation) + 1.005(fertilizer use) + 1.001(farm acres)$$
+
+```{r reverse transform, include=FALSE}
+coef.intercept<-fmA3$coefficients["(Intercept)"]
+exp(coef.intercept)
+
 #population density
 coef.pop<-fmA3$coefficients["pop_dens_2"] 
 exp(coef.pop)/exp(1)
@@ -545,12 +557,7 @@ coef.acre<-fmA3$coefficients["farm_acres_2"]
 exp(coef.acre)/(1^2)
 ```
 
-Reverse transformations
-log(farm income)
-sqrt(fertilizer)
-log(pop density)
-sqrt(farm area)
-
+\newpage
 
 ## Appendices
 
@@ -594,7 +601,6 @@ Pa3 <- gf_dhistogram(~ residuals(fmA2))
 grid.arrange(Pa1, Pa2, Pa3, ncol = 3)
 ```
 
-###Appendix 3
 
 ```{r conditions for full and full-bees, fig.width=7, fig.height=5, fig.keep='last'}
 Pa4 <- mplot(fmA, which = 1)
@@ -613,11 +619,85 @@ grid.arrange(Pa4, Pa5, Pa6, Pa7, Pa8, Pa9, ncol = 3,  nrow = 2)
 
 
 
+### Becca Appendix
 
 
+> Final evaluation of 4 and 5 term models
+
+fmA summary:
+```{r}
+msummary(fmA) 
+```
+\vspace{0.2in}
+
+fmB summary:
+```{r}
+msummary(fmB)
+```
+
+\vspace{0.2in}
+
+> Evaluation of model without outlier, fmA3
 
 
+```{r, fig.height=2.5, fig.width=7, fig.keep='last'}
+fmA3 <- lm(farm_income_2 ~ pop_dens_2 + grazing_rotation + fertilizer_use_2 + farm_acres_2, data = df5)
+Ot1<-mplot(fmA3, which = 1)
+Ot2<-mplot(fmA3, which = 2)
+Ot3<-gf_dhistogram(~ residuals(fmA3))
+grid.arrange(Ot1, Ot2, Ot3, ncol = 3,  nrow = 1)
+```
 
+\vspace{0.2in}
+
+fmA3 summary:
+```{r}
+msummary(fmA3)
+```
+
+\vspace{0.2in}
+
+> Evaluation of model with interactions, fmC
+
+
+```{r fig.height=2.5, fig.width=7, fig.keep='last'}
+fmC <- lm(farm_income_2 ~ pop_dens_2 + grazing_rotation + fertilizer_use_2 + farm_acres_2 + pop_dens_2:grazing_rotation + pop_dens_2:fertilizer_use_2 + pop_dens_2:farm_acres_2, data = df5)
+In1<-mplot(fmC, which = 1)
+In2<-mplot(fmC, which = 2)
+In3<-gf_dhistogram(~ residuals(fmC))
+grid.arrange(In1, In2, In3, ncol = 3,  nrow = 1)
+```
+\vspace{0.2in}
+
+fmC summary:
+```{r}
+msummary(fmC)
+```
+
+\vspace{0.2in}
+
+> Reverse transforming variables
+
+```{r, echo=TRUE}
+coef.intercept<-fmA3$coefficients["(Intercept)"]
+exp(coef.intercept)
+
+#population density
+coef.pop<-fmA3$coefficients["pop_dens_2"] 
+exp(coef.pop)/exp(1)
+
+#grazing
+coef.graze<-fmA3$coefficients["grazing_rotation"]
+exp(coef.graze)/1
+
+#fertilizer
+coef.fert<-fmA3$coefficients["fertilizer_use_2"]
+exp(coef.fert)/(1^2)
+
+#acreage
+coef.acre<-fmA3$coefficients["farm_acres_2"]
+exp(coef.acre)/(1^2)
+```
 
 
 
