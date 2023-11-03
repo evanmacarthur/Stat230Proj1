@@ -15,7 +15,6 @@ output:
 library(mosaic)
 library(car)
 library(httr)
-library(tidyverse)
 library(dplyr)
 library(tigris)
 library(GGally)
@@ -299,14 +298,19 @@ grid.arrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11, ncol = 4)
 
 \newpage
 
-## Model selection
-```{r Variable Selection}
+# Model selection
+```{r include=FALSE}
 best.sub <- regsubsets(farm_income_2 ~ farm_acres_2 + pop_dens_2 + grazing_rotation + fertilizer_use_2 + bee_colonies_2, data = df4)
 names(msummary(best.sub))
+```
+
+```{r}
 with(msummary(best.sub), data.frame(adjr2, cp, bic, rss, outmat)) %>%   
   kable(digits = 3, booktabs = TRUE, align = 'c') %>%
   row_spec(row = 0, angle = 90)
+```
 
+```{r include = FALSE}
 mod.small <- lm(farm_income_2 ~ 1, data = df4)
 mod.all <- lm(farm_income_2 ~ farm_acres_2 + pop_dens_2 + grazing_rotation + fertilizer_use_2 + bee_colonies_2, data=df4)
 stepAIC(mod.small, scope = list(lower = mod.small, upper = mod.all),  
@@ -314,9 +318,11 @@ stepAIC(mod.small, scope = list(lower = mod.small, upper = mod.all),
 stepAIC(mod.all, direction = "backward", trace = FALSE)$anova
 ```
 
-> The final model suggested by best subsets regression is the 4-predictor model with pop_dens_2, grazing_rotation, fertilizer_use_2, and farm_acres_2 without bee colonies 2. This model had the lowest $C_p$ score of 4.2828. This model was also recommended by stepwise regression and backwards elimination, with the lowest AIC score of -6545.7. However, since the 5-predictor model including bee_colonies_2 had similar AIC, and $C_p$ scores, we will manually compare the model strength and significance.
+> We initially selected a model using best subsets and stepwise regression procedures. We also performed backwards elimination to check the AIC value of the full model. The final model suggested by best subsets regression was the 4-predictor model with pop_dens_2, grazing_rotation, fertilizer_use_2, and farm_acres_2 without bee colonies 2. This model had the lowest $C_p$ score of 4.2828. This model was also recommended by stepwise regression and backwards elimination, with the lowest AIC score of -6545.7. However, since the 5-predictor model including bee_colonies_2 had a $C_p$ score < 6, and had a very similar AIC score of -6544.0, we decided to manually compare the 5 term and 6 term models.
 
-```{r Conditions}
+## Model comparison - conditions
+
+```{r Conditions, include=FALSE}
 fmA <- lm(farm_income_2 ~ pop_dens_2 + grazing_rotation + fertilizer_use_2 + farm_acres_2, data = df4)
 mplot(fmA, which = 1)
 mplot(fmA, which = 2)
@@ -328,29 +334,22 @@ mplot(fmB, which = 2)
 gf_dhistogram(~ residuals(fmB))
 ```
 
-> The residuals vs fitted plot, QQ plot, and histogram of the residuals of both models are practically identical and will not serve as a point of difference. The linearity condition is mostly met as there is mostly symmetry over the line residual=0 on the residuals vs fitted values plot, and there does not seem to be major bending or curving of points. The equal variance condition is questionable as there seems to be funneling in of the spread of points on the residual vs fitted value plot as you move to higher fitted values. The normality condition is also questionable as, though the QQ-plot is mostly a straight line with mostly no bending, there does seem to be a very large and bent tail at the high end. Furthermore, the histogram of the residuals, while it is unimodal and centered close to 0, there does seem to be a slight right skew. We will assume independence and proceed. Finally, there appear to be several unusual  points in both models. We compare these conditions with those of the model of untransformed data (Appendix 4).
+> As shown in the appendix, the residuals vs fitted plot, QQ plot, and histogram of the residuals of both models are practically identical and will not serve as a point of difference. The linearity condition is mostly met, as there is mostly symmetry over the line residual=0 on the residuals vs fitted values plot, and there does not seem to be major bending or curving of points. However, there is a noticeable lack of symmetry around a fitted value of 11, and there overall seems to be more variance for positive residual values, which is concerning. The equal variance condition is questionable as there is lower residual variance for higher fitted values. The normality condition is also questionable. Although the QQ-plot is mostly a straight line with mostly no bending, there does seem to be a very large and bent tail at the high end. Furthermore, the histogram of the residuals, while it is unimodal and centered close to 0, is right skewed. We assumed that data values were collected independently. Finally, there appear to be several unusual  points in both models. 
+
+\vspace{0.2in}
+> We next confirmed that our variable transformations helped improve model conditions. As displayed in the appendix, there are many more extreme outliers in the untransformed model, with many very high fitted values that would exert undue influence over our model. As seen in the histogram, the data is highly right skewed. Based on these results, we felt confident that our transformations improved model conditions, even though they did not fully remove condition concerns, and we proceeded with the transformed model.
 
 
-Compare conditions and fit to un-transformed model
-```{r, include=FALSE, fig.show='hide'}
-#actual code for this is in appendix
+```{r, include=FALSE}
 fmA2 <- lm(farm_income_1 ~ pop_dens + grazing_rotation + fertilizer_use + farm_acres, data = df3)
 Pa1 <- mplot(fmA2, which = 1)
 Pa2 <- mplot(fmA2, which = 2)
 Pa3 <- gf_dhistogram(~ residuals(fmA2))
 grid.arrange(Pa1, Pa2, Pa3, ncol = 3)
 ```
->Conditions are definitely worse in the untransformed model. The data is even more skewed, with many extreme residual values that disrupt normality and equal variance. Therefore, it looks like our transformations were helpful, even if they didn't completely fix the data to fit modeling conditions.
+## Model comparison - outliers and influential points
 
-```{r}
-msummary(fmA)
-msummary(fmA2)
-``` 
->Transforming our variables resulting in reducing our model significance, as farm_acres is significant in the untransformed model, with farm_acres_2 is not significant in the second model. However, the improvement in meeting conditions seems sufficient to justify continuing with one of the transformed models. The transformed model also has a higher $R^2_adj$ by 6.8%, which means that the transformations also improved model strength. 
-
-
-
-```{r}
+```{r include = FALSE}
 mplot(fmA, which = 3)
 mplot(fmA, which = 4)
 mplot(fmA, which = 5)
@@ -358,7 +357,7 @@ mplot(fmA, which = 6)
 ```
 
 
-```{r}
+```{r include=FALSE}
 fmA_leverage <- hatvalues(fmA)
 high_fmA_leverage <- which(fmA_leverage > 0.0035549)
 length(high_fmA_leverage)
@@ -366,7 +365,7 @@ problematic_fmA_leverage <- which(fmA_leverage >0.0053324)
 length(problematic_fmA_leverage)
 ```
 
-```{r}
+```{r include=FALSE}
 fmA_stdresiduals <- rstandard(fmA)
 bad_fmA_outlier <- which (abs(fmA_stdresiduals) > 2)
 length(bad_fmA_outlier)
@@ -374,13 +373,13 @@ really_bad_fmA_outlier <- which (abs(fmA_stdresiduals) > 3)
 length(really_bad_fmA_outlier)
 ```
 
-```{r}
+```{r include=FALSE}
 fmA_cdistance <- cooks.distance(fmA)
 influential_fmA <- which(fmA_cdistance > 0.5)
 length(influential_fmA)
 ```
 
-```{r}
+```{r include=FALSE}
 mplot(fmB, which = 3)
 mplot(fmB, which = 4)
 mplot(fmB, which = 5)
@@ -388,7 +387,7 @@ mplot(fmB, which = 6)
 ```
 
 
-```{r}
+```{r include=FALSE}
 fmB_leverage<- hatvalues(fmB)
 high_fmB_leverage <- which(fmB_leverage > 0.0035549)
 length(high_fmB_leverage)
@@ -396,7 +395,7 @@ problematic_fmB_leverage <- which(fmB_leverage > 0.0053324)
 length(problematic_fmB_leverage)
 ```
 
-```{r}
+```{r include=FALSE}
 fmB_stdresiduals <- rstandard(fmB)
 bad_fmB_outlier <- which (abs(fmB_stdresiduals) > 2)
 length(bad_fmB_outlier)
@@ -404,7 +403,7 @@ really_bad_fmB_outlier <- which (abs(fmB_stdresiduals) > 3)
 length(really_bad_fmB_outlier)
 ```
 
-```{r}
+```{r include=FALSE}
 fmB_cdistance <- cooks.distance(fmB)
 influential_fmB <- which(fmB_cdistance > 0.5)
 fmB_cdistance[influential_fmB]
@@ -416,47 +415,44 @@ dim(df4)
 207-136
 ```
 
->
-fmA:
-High leverage would be 2(k+1)/n = 2(4+1)/2813 = 0.0035549 and problematic leverage would be 3(k+1)/n =  0.0053324 There are 236 points with high leverages, 136 of which have problematic leverages. There are 91 points with the absolute value of their standardized residuals above 2 but not 3, making them outliers. There are 62 points with an absolute value of their standardized residuals above 3, making them big outliers. There do not appear to be many influential points, as there are no points with Cook's distances above or near 0.5.
-fmB:
-High leverage would be 2(k+1)/n = 2(5+1)/2813 = 0.0035549 and problematic leverage would be 3(k+1)/n = 0.0053324. There are 337 points with high leverages, 207 of which have problematic leverages. There are 91 points with the absolute value of their standardized residuals above 2 but not 3, making them outliers. There are 62 points with an absolute value of their standardized residuals above 3, making them big outliers. There do not appear to be many influential points, as there are no points with Cook's distances above or near 0.5.
+>   We next did a more thorough comparison of outliers and influential points between the two models. Standardized residual, Cook's distance, standardized residual vs leverage, and Cook's distance vs leverage plots looked fairly similar between the two models (see appendix). For fmA, the high leverage cutoff is 2(k+1)/n = 2(4+1)/2813 = 0.0035549 and the problematic leverage cutoff is 3(k+1)/n =  0.0053324 There are 236 points with high leverages, 136 of which have problematic leverages. There are 91 points with the absolute value of their standardized residuals above 2 but not 3, making them outliers. There are 62 points with an absolute value of their standardized residuals above 3, making them big outliers. There do not appear to be many influential points, as there are no points with Cook's distances above or near 0.5.
+
+\vspace{0.2in}
+> For fmB, the high leverage cutoff is 2(k+1)/n = 2(5+1)/2813 = 0.0035549 and the problematic leverage cutoff is 3(k+1)/n = 0.0053324. There are 337 points with high leverages, 207 of which have problematic leverages. There are 91 points with the absolute value of their standardized residuals above 2 but not 3, making them outliers. There are 62 points with an absolute value of their standardized residuals above 3, making them big outliers. There do not appear to be many influential points, as there are no points with Cook's distances above or near 0.5.
 So, fmA seems to have 71 less points with problematic leverages. They have the same number of big outliers, and neither have influential points.
 
+## Model comparison - multicollinearity
+
+```{r include=FALSE}
+cor(df4)
+plot(df4)
+```
 
 
 ```{r}
-cor(df4)
-plot(df4)
+#might be nice to keep this in in a table
 vif(fmA) 
 vif(fmB)
 ```
 
 
->
-Thankfully, for both models, none of the VIF values are above 5 which would strongly indicate multicollinearity. The inclusion of bee_colonies_2 in fmB has little impact on VIF. 
-The correlation matrix for the bee_colonies_2 pairs isn't too concerning with correlation coefficients of 0.23 or lower. 
+> We next checked for multicollinearity in both models by analyzing correlation plots and VIF scores. All VIF scores for both models were below 2, indicating that multicollinearity is not a concern for either model. The inclusion of bee_colonies_2 in fmB has little impact on VIF scores. The correlation matrix for the bee_colonies_2 pairs isn't too concerning with correlation coefficients of 0.23 or lower (see appendix). This further indicates that including bee_colonies_2 does not increase multicollinearity. 
 
-
-```{r bee_colonies_2 individually}
-
-gf_point(farm_income_2 ~ bee_colonies_2, data = df4) %>% gf_lm()
-cor(farm_income_2 ~ bee_colonies_2, data = df4)
-
-fm_bee_colonies_2 <- lm(farm_income_2 ~ bee_colonies_2, data = df4)
-msummary(fm_bee_colonies_2)
-
+## Model comparison - AV plot
+```{r bee_colonies_2 individually, fig.size='50%'}
 avPlot(fmB, "bee_colonies_2")
 ```
-> Looking at a simple linear regression model of the relationship between farm_income_2 and bee_colonies_2, I see a weak, positive, unclearly linear relationship between farm_income_2 and farm_acres_2 with several outliers and a correlation coefficient of 0.024889. The AV plot of the additional predictor of fmB, bee_colonies_2, shows a horizontal band that is curvilinear. This indicates that bee_colonies_2 contains very little additional information about farm_income_2, beyond that from the other predictors. Both of these indicate that bee_colonies_2 may not be a significant or strong predictor for farm_income_2.
 
-```{r Nested f-test}
+> The AV plot of the additional predictor of fmB, bee_colonies_2, shows a horizontal band that is curvilinear. This indicates that bee_colonies_2 contains very little additional information about farm_income_2, beyond that from the other predictors. This indicates that bee_colonies_2 is probably not a strong predictor of farm_income_2.
+
+## Model comparison - nested F test
+```{r Nested f-test, include=FALSE}
 anova(fmA, fmB)
 ```
-$H_0: \beta_{farm,acres,2} = 0$
-$H_A: \beta_{farm,acres,2} \neq 0$
+$H_0: \beta_{bee-colonies} = 0$
+$H_A: \beta_{bee-colonies} \neq 0$
 
-> Since the p-value of 0.59 is large, we fail to reject the null hypothesis and do not have enough evidence to conclude the alternative hypothesis that the predictor bee_colonies_2 is significant.
+> We performed a nested F test on the two models, with the above null and alternative hypotheses. The test resulted in a p-value of 0.59, so we fail to reject the null hypothesis and do not have enough evidence to conclude the that the predictor bee_colonies_2 is significant after controlling for other predictor effects.
 
 ## Bootstrapping
 
@@ -465,7 +461,7 @@ coef.actual<-fmB$coefficients["bee_colonies_2"]
 
 #bootstrap
 set.seed(230) #get same result every time you knit file
-bootstrap <- do(1000)*lm(farm_income_2 ~ farm_acres_2 + pop_dens_2 + grazing_rotation + fertilizer_use_2 + bee_colonies_2, data = resample(df4)) 
+bootstrap <- do(100)*lm(farm_income_2 ~ farm_acres_2 + pop_dens_2 + grazing_rotation + fertilizer_use_2 + bee_colonies_2, data = resample(df4)) 
 names(bootstrap)
 
 
@@ -481,7 +477,7 @@ c(coef.actual - qtU*SE, coef.actual - qtL*SE)
 
 >   Since the normality condition was not met for either model, we will test the significance of bee_colonies_2 using bootstrapping. We assumed that our bootstrapped distribution was nonnormal and skewed. The resulting 95% confidence interval for the coefficient of bee_colonies_2 is (-0.016319, 0.027324). Since this interval includes 0 (see figure below),we are not 95% confident that the bee_colonies_2 is not 0, and conclude that this predictor is not significant. 
 
-```{r fig.width=3, fig.length=3}
+```{r fig.width=3, fig.length=3, fig.width=5}
 gf_dens(~ bee_colonies_2, data = bootstrap) %>%
   gf_vline(xintercept = coef.actual, color = "cyan") |> 
   gf_vline(xintercept = c(coef.actual - qtU*SE, coef.actual - qtL*SE), color = "red")
@@ -495,14 +491,20 @@ msummary(fmB)
 ```
 
 >   We conclude that fmA, the four term model is preferable to fmB, the five term model that includes bee colonies as a predictor. As described above, fmA and fmB have very similar deviations from model conditions. However, fmB has about 100 more points with high leverage than fmA, indicating that fmB has more potential to make inaccurate predictions than fmA. 
-  After controlling for the effects of the other four predictors, bee colonies has an insignificant effect on farm income, as indicated by a nested f test and individual coefficient t stat with p values of 0.59. We double checked this result with a bootstrap test since our model did not fit conditions, but still found that the effects of bee colonies on farm income were insignificant.
-    Furthermore, as we saw in our initial model selection process, fmA is a stronger model than fmB. Both models have an adjusted $R^2$ of 0.537, and fmA has lower AIC and Cp scores than fmB. Overall, we found no reasons why fmB is preferable and many reasons why fmA is preferable. We will therefore proceed with analyzing fmA.
+
+\vspace{0.2in}
+>  After controlling for the effects of the other four predictors, bee colonies has an insignificant effect on farm income, as indicated by a nested f test and individual coefficient t stat with p values of 0.59. We double checked this result with a bootstrap test since our model did not fit conditions, but still found that the effects of bee colonies on farm income were insignificant.
+
+\vspace{0.2in}
+>    Furthermore, as we saw in our initial model selection process, fmA is a stronger model than fmB. Both models have an adjusted $R^2$ of 0.537, and fmA has lower AIC and Cp scores than fmB. Overall, we found no reasons why fmB is preferable and many reasons why fmA is preferable. We will therefore proceed with analyzing fmA.
 
 
 ## Outlier removal
 
 >   One outlier, at index 1649, stands out in our equal variance plot and has the largest standard residual value in fmA. We tried removing it and reassessing conditions and model fit. See the appendix for our specific model results for this new model, fmA3. Removing this outlier decreased residual variance at the outlier's fitted value and taking out such an extreme value improved data normality. However, both equal variance and normality are still very questionable. 
-    Removing this outlier did slightly decrease the significance of pop_dens_2 (p = 1.1e-13 compared to 5.5e-14 with the outlier) and farm_acres_2 (p = 0.072 compared to 0.065 with the outlier). However, removing the outlier increased $R^2$ by 0.5%, from 0.537 to 0.542. Given that taking out this outlier improved model conditions and increased model strength slightly, and since the impacts on model significance were small and less important than improvement to model conditions, we decided that it made sense to leave the outlier out of our model.
+
+\vspace{0.2in}
+>    Removing this outlier did slightly decrease the significance of pop_dens_2 (p = 1.1e-13 compared to 5.5e-14 with the outlier) and farm_acres_2 (p = 0.072 compared to 0.065 with the outlier). However, removing the outlier increased $R^2$ by 0.5%, from 0.537 to 0.542. Given that taking out this outlier improved model conditions and increased model strength slightly, and since the impacts on model significance were small and less important than improvement to model conditions, we decided that it made sense to leave the outlier out of our model.
 
 ```{r remove outlier, include=FALSE}
 stresid <- rstandard(fmA)
@@ -526,7 +528,9 @@ msummary(fmA3)
 ## Interactions
 
 >   Finally, we decided to test some interactions in our model. We specifically tested all interactions involving population density, since we thought that the population density of a county could modulate the effects of farm size and farming practices on farm income. For example, more populous counties might have more access to resources that would help them profitably employ fertilizer and grazing rotation practices.
-    See the appendix for specific model results for this model, fmC. We first checked the conditions of our model with these three interaction terms. Equal variance, normality, and linearity looked very similar to our model without interactions. Looking at model significance, we found that all three interactions were significant or close to significant: p=0.0561 for pop_dens_2:grazing_rotation; p=0.0274 for pop_dens_2:fertilizer_use_2; p=0.0199 for pop_dens_2:farm_acres_2. However, adding these interaction terms barely increased the overall strength of our model: $R^2$ adjusted changed from 0.542 to 0.543. Although these interactions are interesting and fairly significant, they are not strong predictors of farm income and do not improve model conditions. We decided not to include them in our final model in order to simplify our model. This allowed us to interpret the effects of individual predictors on farm income.
+
+\vspace{0.2in}
+>    See the appendix for specific model results for this model, fmC. We first checked the conditions of our model with these three interaction terms. Equal variance, normality, and linearity looked very similar to our model without interactions. Looking at model significance, we found that all three interactions were significant or close to significant: p=0.0561 for pop_dens_2:grazing_rotation; p=0.0274 for pop_dens_2:fertilizer_use_2; p=0.0199 for pop_dens_2:farm_acres_2. However, adding these interaction terms barely increased the overall strength of our model: $R^2$ adjusted changed from 0.542 to 0.543. Although these interactions are interesting and fairly significant, they are not strong predictors of farm income and do not improve model conditions. We decided not to include them in our final model in order to simplify our model. This allowed us to interpret the effects of individual predictors on farm income.
 
 ```{r include=FALSE}
 fmC <- lm(farm_income_2 ~ pop_dens_2 + grazing_rotation + fertilizer_use_2 + farm_acres_2 + pop_dens_2:grazing_rotation + pop_dens_2:fertilizer_use_2 + pop_dens_2:farm_acres_2, data = df5)
@@ -638,10 +642,91 @@ grid.arrange(Pa4, Pa5, Pa6, Pa7, Pa8, Pa9, ncol = 3,  nrow = 2)
 
 
 
-### Becca Appendix
+# Becca Appendix: Model selection and interpretation
+
+## Model selection
+
+Stepwise regression:
+```{r include = FALSE}
+mod.small <- lm(farm_income_2 ~ 1, data = df4)
+mod.all <- lm(farm_income_2 ~ farm_acres_2 + pop_dens_2 + grazing_rotation + fertilizer_use_2 + bee_colonies_2, data=df4)
+stepAIC(mod.small, scope = list(lower = mod.small, upper = mod.all),  
+        direction = "both", trace = FALSE)$anova
+```
+
+\vspace{0.2in}
+Backwards elimination:
+```{r}
+stepAIC(mod.all, direction = "backward", trace = FALSE)$anova
+```
+
+## Model comparison - conditions
+
+fmA conditions:
+```{r fig.width=8, fig.height=2.5, fig.keep='last'}
+fmA <- lm(farm_income_2 ~ pop_dens_2 + grazing_rotation + fertilizer_use_2 + farm_acres_2, data = df4)
+cp1<-mplot(fmA, which = 1)
+cp2<-mplot(fmA, which = 2)
+cp3<-gf_dhistogram(~ residuals(fmA))
+grid.arrange(cp1, cp2, cp3, ncol = 3,  nrow = 1)
+```
+
+\vspace{0.2in}
+fmB conditions:
+```{r fig.width=8, fig.height=2.5, fig.keep='last'}
+fmB <- lm(farm_income_2 ~ farm_acres_2 + pop_dens_2 + grazing_rotation + fertilizer_use_2 + bee_colonies_2, data = df4)
+cp4<-mplot(fmB, which = 1)
+cp5<-mplot(fmB, which = 2)
+cp6<-gf_dhistogram(~ residuals(fmB))
+grid.arrange(cp4, cp5, cp6, ncol = 3,  nrow = 1)
+```
+
+Untransformed fmA conditions:
+```{r, fig.width=8, fig.height=2.5, fig.keep='last'}
+fmA2 <- lm(farm_income_1 ~ pop_dens + grazing_rotation + fertilizer_use + farm_acres, data = df3)
+Pa1 <- mplot(fmA2, which = 1)
+Pa2 <- mplot(fmA2, which = 2)
+Pa3 <- gf_dhistogram(~ residuals(fmA2))
+grid.arrange(Pa1, Pa2, Pa3, ncol = 3, nrow=1)
+```
+
+## Model comparison - outliers and influential points
+
+fmA plots:
+```{r fig.width=5, fig.height=5}
+mp1<-mplot(fmA, which = 3)
+mp2<-mplot(fmA, which = 4)
+mp3<-mplot(fmA, which = 5)
+mp4<-mplot(fmA, which = 6)
+grid.arrange(mp1, mp2, mp3, mp4, ncol = 2, nrow=2)
+```
+
+\vspace{0.2in}
+fmB plots:
+```{r fig.width=5, fig.height=5}
+mp5<-mplot(fmB, which = 3)
+mp6<-mplot(fmB, which = 4)
+mp7<-mplot(fmB, which = 5)
+mp8<-mplot(fmB, which = 6)
+grid.arrange(mp5, mp6, mp7, mp8, ncol = 2, nrow=2)
+```
+
+## Model comparison - multicollinearity
+
+Correlation matrix and plot matrix for all relevant variables:
+```{r}
+cor(df4)
+plot(df4)
+```
+
+## Model comparison - nested F test
+
+```{r}
+anova(fmA, fmB)
+```
 
 
-> Final evaluation of 4 and 5 term models
+## Final evaluation of 4 and 5 term models
 
 fmA summary:
 ```{r}
@@ -656,7 +741,7 @@ msummary(fmB)
 
 \vspace{0.2in}
 
-> Evaluation of model without outlier, fmA3
+## Evaluation of model without outlier, fmA3
 
 
 ```{r, fig.height=2.5, fig.width=7, fig.keep='last'}
@@ -676,7 +761,7 @@ msummary(fmA3)
 
 \vspace{0.2in}
 
-> Evaluation of model with interactions, fmC
+## Evaluation of model with interactions, fmC
 
 
 ```{r fig.height=2.5, fig.width=7, fig.keep='last'}
@@ -695,9 +780,9 @@ msummary(fmC)
 
 \vspace{0.2in}
 
-> Reverse transforming variables
+## Reverse transforming variables
 
-```{r, echo=TRUE}
+```{r}
 coef.intercept<-fmA3$coefficients["(Intercept)"]
 exp(coef.intercept)
 
