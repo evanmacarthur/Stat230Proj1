@@ -1,7 +1,6 @@
 ---
-title: 'STAT230 Work Team Project: Proposal & EDA'
+title: 'STAT230 Work Team Project'
 author: 'Work Team 7: Evan, Becca, Laith'
-date: "due Thursday, November 2nd"
 output:
   pdf_document:
     fig_height: 3
@@ -61,7 +60,7 @@ https://www.nass.usda.gov/AgCensus/
 
 ## Dataset & Wrangling   
 
-The initial combining, and wrangling of this large data set can be found at https://github.com/evanmacarthur/Stat230Proj1. The data was then finished in appendix 1
+The initial combining, and wrangling of this large data set can be found at https://github.com/evanmacarthur/Stat230Proj1. The data wrangling was then perfected as shown in appendix 1
 ```{r import data select columns and calculate, include=FALSE}
 ## wrangle!!  
 df0 <- read_csv("gooddata.csv")
@@ -102,7 +101,7 @@ ggpairs(df1, columns = 1:7, progress = FALSE)
 
 
 ```{r farm income}
-gf_histogram(~farm_income_1, data=df1)
+p1 <- gf_histogram(~farm_income_1, data=df1, xlab = "Farm Income, $", ylab = "Count")
 favstats(~farm_income_1, data=df1) |> 
   kable(booktabs=TRUE, align = "c", caption = "Summary of Farm Income") |> 
   kable_styling(position = "center")
@@ -118,12 +117,19 @@ df2 <- df1 |>
 #we had one value that was very low because it was by far the smallest, even after we transposed the data. 
 df2 <- df2 |> 
   filter(farm_income_2 > 5)
-gf_histogram(~farm_income_2, data=df2)
+p2 <- gf_histogram(~farm_income_2, data=df2, xlab = "Log(Farm Income), $", ylab = "Count")
+
+```
+```{r, fig.width = 7}
+grid.arrange(p1, p2, ncol = 2)
+
+
 favstats(~farm_income_2, data=df2) |> 
   kable(booktabs = TRUE, align = 'c', caption = "Summary of Transformed Farm Income") |>
   kable_styling(position = "center")
 ```
->Looks much improved, the mean is 11.4, and median is 11.318, and the histogram still is not ideal, but better. The IQR = 0.699
+
+>Looks much improved, the mean is 11.4, and median is 11.319, and the histogram still is not ideal, but better. The IQR = 0.699, likely due to the sampling methods, which only include farms that carry out above $1200 of business annually. It seems like this may introduce a this sort  of sharp drop-off in log(farm income)
 
 
 
@@ -138,7 +144,7 @@ ggpairs(df2, columns = 2:8, progress = FALSE)
 ```{r fertilizer use}
 gf_point(data = df2, farm_income_2 ~ fertilizer_use) |> 
   gf_lm()
-gf_histogram(~fertilizer_use, data=df2)
+p3 <- gf_histogram(~fertilizer_use, data=df2, xlab = "Fertilizer Use, $", ylab = "Count")
 
 favstats(~fertilizer_use, data=df2) |> 
   kable(booktabs = TRUE, align = 'c') |> 
@@ -154,7 +160,7 @@ df3 <- df2 |>
 
 gf_point(data = df3, farm_income_2 ~ fertilizer_use_2) |> 
   gf_lm()
-gf_histogram(~fertilizer_use_2, data=df3)
+p4 <- gf_histogram(~fertilizer_use_2, data=df3, xlab = "sqrt(Fertilizer Use, $)", ylab = "Count")
 
 favstats(~fertilizer_use_2, data=df3) |> 
   kable(booktabs = TRUE, align = 'c') |> 
@@ -167,7 +173,7 @@ favstats(~fertilizer_use_2, data=df3) |>
 ```{r population density}
 gf_point(data = df3, farm_income_2 ~ pop_dens) |> 
   gf_lm()
-gf_histogram(~pop_dens, data=df3)
+p5 <- gf_histogram(~pop_dens, data=df3, xlab = "Population Density (P/sqrML)", ylab = "Count")
 
 favstats(~pop_dens, data=df3) |> 
   kable(booktabs = TRUE, align = 'c') |> 
@@ -188,7 +194,7 @@ df3 <- df3 |>
 df3 <- df3 |> 
   filter(!is.infinite(pop_dens_2))
 
-gf_histogram(data = df3, ~ pop_dens_2, bins = 100)
+p6 <- gf_histogram(data = df3, ~ pop_dens_2, bins = 100, xlab ="Population Density sqrt(P/sqrML)", ylab = "Count")
 
 gf_point(data = df3, farm_income_2 ~ pop_dens_2) |> 
   gf_lm()
@@ -201,31 +207,33 @@ favstats(~pop_dens_2, data=df3) |>
 
 
 
-```{r farm acres}
-gf_point(data = df3, farm_income_2 ~ farm_acres) |> 
-  gf_lm()
-gf_histogram(data = df3, ~ farm_acres)
-favstats(~farm_acres, data=df3) |> 
+```{r farm acres, fig.width = 8}
+#gf_point(data = df3, farm_income_2 ~ farm_acres) |> 
+#  gf_lm()
+p7 <- gf_histogram(data = df3, ~ farm_acres, xlab = "Farm Acres", ylab = "Count")
+
+
+#transformed data
+df3 <- df3 |> 
+  mutate(farm_acres_2 = sqrt(farm_acres))
+
+#gf_point(data = df3, farm_income_2 ~ farm_acres_2) |> 
+ # gf_lm()
+p8 <- gf_histogram(data = df3, ~ farm_acres_2, xlab = "sqrt(Farm Acres)", ylab = "Count")
+
+grid.arrange(p7, p8, ncol = 2)
+
+favstats(~farm_acres_2, data=df3) |> 
   kable(booktabs = TRUE, align = 'c') |> 
   kable_styling(position = "center")
 
-#farm acres is super right skewed and not linear w/ farm income, so trying a transformation
+favstats(~farm_acres, data=df3) |> 
+  kable(booktabs = TRUE, align = 'c') |> 
+  kable_styling(position = "center")
 ```
 
 >Once again, unhelpful scatterplot, right skewed distribution, mean of 291893, median of 179306	and IQR of 282196
 
-```{r farm acres transform}
-df3 <- df3 |> 
-  mutate(farm_acres_2 = sqrt(farm_acres))
-
-gf_point(data = df3, farm_income_2 ~ farm_acres_2) |> 
-  gf_lm()
-gf_histogram(data = df3, ~ farm_acres_2)
-favstats(~farm_acres_2, data=df3) |> 
-  kable(booktabs = TRUE, align = 'c') |> 
-  kable_styling(position = "center")
-#looks better, but still pretty questionable
-```
 >This transformation improved it somewhat, the histogram is less right skewed, but the relationship does not look very linear based on the scatter plot, the mean is 20.833 and the median is 16.353, and the IQR is 10.446
 
 
@@ -233,7 +241,7 @@ favstats(~farm_acres_2, data=df3) |>
 ```{r bee colonies}
 gf_point(data = df3, farm_income_2 ~ bee_colonies) |> 
   gf_lm()
-gf_histogram(data = df3, ~ bee_colonies)
+p9 <- gf_histogram(data = df3, ~ bee_colonies, xlab = "Bee Colonies", ylab = "Count")
 favstats(~bee_colonies, data=df3)|> 
   kable(booktabs = TRUE, align = 'c') |> 
   kable_styling(position = "center")
@@ -249,7 +257,7 @@ df3 <- df3 |>
 
 gf_point(data = df3, farm_income_2 ~ bee_colonies_2) |> 
   gf_lm()
-gf_histogram(data = df3, ~ bee_colonies_2)
+p10 <- gf_histogram(data = df3, ~ bee_colonies_2, xlab = "log(Bee Colonies)", ylab = "Count")
 favstats(~bee_colonies_2, data=df3)|> 
   kable(booktabs = TRUE, align = 'c') |> 
   kable_styling(position = "center")
@@ -261,7 +269,7 @@ favstats(~bee_colonies_2, data=df3)|>
 ```{r grazing rotation}
 gf_point(data = df3, farm_income_2 ~ grazing_rotation) |> 
   gf_lm()
-gf_histogram(data = df3, ~ grazing_rotation)
+p11 <- gf_histogram(data = df3, ~ grazing_rotation, xlab = "Grazing/Crop Rotation", ylab = "Count")
 favstats(~grazing_rotation, data=df3)|> 
   kable(booktabs = TRUE, align = 'c') |> 
   kable_styling(position = "center")
@@ -284,6 +292,11 @@ ggpairs(df4, columns = 1:6, progress = FALSE)
 > These generally look much better, we still have a lot of 0 values in the population density, but they are real, so the data is not actually normally distributed. The scatter plots generally look much more linear than before transforming the variables, and the correlations are similar to before transforming. Bee colonies is no longer correlated though
 > I removed missing values to make my following tests and operations easier.
 
+```{r, fig.width=8, fig.width = 7}
+grid.arrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11, ncol = 4)
+```
+
+
 \newpage
 
 ## Model selection
@@ -301,7 +314,7 @@ stepAIC(mod.small, scope = list(lower = mod.small, upper = mod.all),
 stepAIC(mod.all, direction = "backward", trace = FALSE)$anova
 ```
 
-> The final model suggested by best subsets regression is the 4-predictor model with pop_dens_2, grazing_rotation, fertilizer_use_2, and farm_acres_2 without bee colonies. This model had the lowest $C_p$ score of 4.2828. This model was also recommended by stepwise regression and backwards elimination, with the lowest AIC score of -6545.7. However, since the 5-predictor model including bee_colonies_2 had similar AIC, and $C_p$ scores, we will manually compare the model strength and significance using the tools we have learned in STAT-230.
+> The final model suggested by best subsets regression is the 4-predictor model with pop_dens_2, grazing_rotation, fertilizer_use_2, and farm_acres_2 without bee colonies 2. This model had the lowest $C_p$ score of 4.2828. This model was also recommended by stepwise regression and backwards elimination, with the lowest AIC score of -6545.7. However, since the 5-predictor model including bee_colonies_2 had similar AIC, and $C_p$ scores, we will manually compare the model strength and significance.
 
 ```{r Conditions}
 fmA <- lm(farm_income_2 ~ pop_dens_2 + grazing_rotation + fertilizer_use_2 + farm_acres_2, data = df4)
@@ -315,11 +328,10 @@ mplot(fmB, which = 2)
 gf_dhistogram(~ residuals(fmB))
 ```
 
-> The residuals vs fitted plot, QQ plot, and histogram of the residuals of both models are practically identical and will not serve as a point of difference.
-The Linearity condition is mostly met as there is mostly symmetry over the line residual=0 on the residuals vs fitted values plot, and there does not seem to be major bending or curving of points. The Equal Variance condition is questionable as there seems to be funneling in of the spread of points on the residual vs fitted value plot as you move to higher fitted values. The Normality condition is also questionable as, though the QQ-plot is mostly a straight line with mostly no bending, there does seem to be a very large and bent tail at the high end. Furthermore, the histogram of the residuals, while it is unimodal and centered close to 0 (a little below 0 actually), there does seem to be a significant right skew. We will assume independence and randomness and proceed. Finally, there appear to be several outliers on both models.
+> The residuals vs fitted plot, QQ plot, and histogram of the residuals of both models are practically identical and will not serve as a point of difference. The linearity condition is mostly met as there is mostly symmetry over the line residual=0 on the residuals vs fitted values plot, and there does not seem to be major bending or curving of points. The equal variance condition is questionable as there seems to be funneling in of the spread of points on the residual vs fitted value plot as you move to higher fitted values. The normality condition is also questionable as, though the QQ-plot is mostly a straight line with mostly no bending, there does seem to be a very large and bent tail at the high end. Furthermore, the histogram of the residuals, while it is unimodal and centered close to 0, there does seem to be a slight right skew. We will assume independence and proceed. Finally, there appear to be several unusual  points in both models. We compare these conditions with those of the model of untransformed data (Appendix 4).
 
 
-Compare conditions and fit to untransformed model
+Compare conditions and fit to un-transformed model
 ```{r, include=FALSE, fig.show='hide'}
 #actual code for this is in appendix
 fmA2 <- lm(farm_income_1 ~ pop_dens + grazing_rotation + fertilizer_use + farm_acres, data = df3)
@@ -333,8 +345,8 @@ grid.arrange(Pa1, Pa2, Pa3, ncol = 3)
 ```{r}
 msummary(fmA)
 msummary(fmA2)
-```
->The transformed model also has a much higher $R^2$ adjusted, higher by 6.8%. This verifies that our transformations were helpful for improving model strength.
+``` 
+>Transforming our variables resulting in reducing our model significance, as farm_acres is significant in the untransformed model, with farm_acres_2 is not significant in the second model. However, the improvement in meeting conditions seems sufficient to justify continuing with one of the transformed models. The transformed model also has a higher $R^2_adj$ by 6.8%, which means that the transformations also improved model strength. 
 
 
 
@@ -487,7 +499,7 @@ msummary(fmB)
     Furthermore, as we saw in our initial model selection process, fmA is a stronger model than fmB. Both models have an adjusted $R^2$ of 0.537, and fmA has lower AIC and Cp scores than fmB. Overall, we found no reasons why fmB is preferable and many reasons why fmA is preferable. We will therefore proceed with analyzing fmA.
 
 
-##Outlier removal
+## Outlier removal
 
 >   One outlier, at index 1649, stands out in our equal variance plot and has the largest standard residual value in fmA. We tried removing it and reassessing conditions and model fit. See the appendix for our specific model results for this new model, fmA3. Removing this outlier decreased residual variance at the outlier's fitted value and taking out such an extreme value improved data normality. However, both equal variance and normality are still very questionable. 
     Removing this outlier did slightly decrease the significance of pop_dens_2 (p = 1.1e-13 compared to 5.5e-14 with the outlier) and farm_acres_2 (p = 0.072 compared to 0.065 with the outlier). However, removing the outlier increased $R^2$ by 0.5%, from 0.537 to 0.542. Given that taking out this outlier improved model conditions and increased model strength slightly, and since the impacts on model significance were small and less important than improvement to model conditions, we decided that it made sense to leave the outlier out of our model.
@@ -528,7 +540,7 @@ msummary(fmA3)
 msummary(fmC)
 ```
 
-##Final Conclusion:
+## Final Conclusion:
 
 >   Overall, our final model was fmA3, which has outlier 1649 removed and has no interaction terms. This model indicates that 54.2% of the variability in farm_income_2 can be explained by the multiple linear relationship between farm_income_2 and pop_dens_2, grazing_rotation, fertilizer_use_2, and farm_acres_2. Additionally, this model indicates that average farm income in a county increases with increasing population density, proportion of farms that use grazing rotations, average fertilizer use, and average farm size. Specifically, average farm income increases by $0.31 for every 1 person/acre density increase; farm income increases by $0.05 for every 10% increase in the percent of farms that use grazing rotations; farm income increases by $1.00 for every $1 increase in average farm fertilizer expenditure; and farm income increases by $1.00 for every 1 acre increase in average farm size. That is, counties with bigger farms that use more fertilizer, counties with more farms that use grazing rotations, and counties with large population densities are likely to contain more profitable farms.
 
@@ -562,9 +574,13 @@ exp(coef.acre)/(1^2)
 ## Appendices
 
 
-###Appendix 1
 
-```{r wrangling good ag data, eval=FALSE}
+
+### Appendix 1: Data Wrangling
+
+
+
+```{r wrangling good ag data, eval=FALSE, include=TRUE}
 df0 <- read_csv("gooddata.csv")
 df0 <- df0 |> 
   clean_names()
@@ -591,7 +607,10 @@ df1 <- df1 |>
 ```
 
 
-###Appendix 2. Plots of observed vs theoretical values, and Q-Q plots for the initial three models
+
+### Appendix 2. Plots of observed vs theoretical values, and Q-Q plots for the initial three models
+
+
 
 ```{r model checking for untransformed with everything accept bees, fig.width=7, fig.keep='last'}
 
