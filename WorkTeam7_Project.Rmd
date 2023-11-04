@@ -24,7 +24,6 @@ library(leaps)
 library(kableExtra)
 library(MASS)
 library(gridExtra)
-library(fBasics)
 ```
 
 ```{r include=FALSE}
