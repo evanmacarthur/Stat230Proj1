@@ -673,7 +673,7 @@ grid.arrange(Pa1, Pa2, Pa3, ncol = 3, nrow=1)
 
 fmA plots:
 
-```{r fig.width=5, fig.height=5}
+```{r, fig.size = '40%'}
 mp1<-mplot(fmA, which = 3)
 mp2<-mplot(fmA, which = 4)
 mp3<-mplot(fmA, which = 5)
@@ -685,7 +685,7 @@ grid.arrange(mp1, mp2, mp3, mp4, ncol = 2, nrow=2)
 
 fmB plots:
 
-```{r fig.width=5, fig.height=5}
+```{r fig.size = '40%'}
 mp5<-mplot(fmB, which = 3)
 mp6<-mplot(fmB, which = 4)
 mp7<-mplot(fmB, which = 5)

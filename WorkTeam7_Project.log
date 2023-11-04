@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.14)  4 NOV 2023 15:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.14)  4 NOV 2023 15:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -680,98 +680,96 @@ File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf Graphic file (
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf  used on input line 818.
 (pdftex.def)             Requested size: 469.75385pt x 146.79807pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf, id=352, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf, id=352, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf  used on input line 830.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf, id=353, 361.35pt x 361.35pt>
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf, id=353, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf  used on input line 831.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
 
 Overfull \hbox (255.16544pt too wide) in paragraph at lines 830--832
 [][] [] 
  []
 
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf, id=354, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf, id=354, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf  used on input line 837.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
 [15 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf, id=382, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf, id=382, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf  used on input line 843.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf, id=383, 361.35pt x 361.35pt>
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf, id=383, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf  used on input line 844.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
 
 Overfull \hbox (255.16544pt too wide) in paragraph at lines 843--845
 [][] [] 
  []
 
-[16 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf, id=396, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf, id=384, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf  used on input line 854.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf, id=397, 361.35pt x 361.35pt>
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf, id=385, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf  used on input line 855.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
 
 Overfull \hbox (255.16544pt too wide) in paragraph at lines 854--856
 [][] [] 
  []
 
-[17 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf, id=419, 361.35pt x 361.35pt>
+[16 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf, id=415, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf  used on input line 861.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-[18 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf, id=437, 361.35pt x 361.35pt>
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf, id=416, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf  used on input line 867.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf, id=438, 361.35pt x 361.35pt>
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf, id=417, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf  used on input line 868.
-(pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
+(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
 
 Overfull \hbox (255.16544pt too wide) in paragraph at lines 867--869
 [][] [] 
  []
 
-[19 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf, id=452, 361.35pt x 216.81pt>
+[17 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf, id=443, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf  used on input line 893.
 (pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
-[20 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf>] [21 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf, id=485, 505.89pt x 180.675pt>
+[18 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf>] [19 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf, id=477, 505.89pt x 180.675pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf  used on input line 958.
 (pdftex.def)             Requested size: 469.76265pt x 167.77237pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf, id=486, 505.89pt x 180.675pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf, id=478, 505.89pt x 180.675pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf>
 Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf  used on input line 987.
 (pdftex.def)             Requested size: 469.76265pt x 167.77237pt.
-[22 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf>] [23 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf>] (./WorkTeam7_Project.aux)
+[20 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf>] [21 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf>] (./WorkTeam7_Project.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -779,18 +777,18 @@ Package rerunfilecheck Info: File `WorkTeam7_Project.out' has not changed.
 (rerunfilecheck)             Checksum: 763D4A55E4F936276836BE6D0C80A39B;7611.
  ) 
 Here is how much of TeX's memory you used:
- 13084 strings out of 476928
- 218784 string characters out of 5823805
+ 13082 strings out of 476928
+ 218770 string characters out of 5823805
  565511 words of memory out of 5000000
  33960 multiletter control sequences out of 15000+600000
  516050 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  72i,9n,77p,631b,578s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}<c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on WorkTeam7_Project.pdf (23 pages, 19106280 bytes).
+Output written on WorkTeam7_Project.pdf (21 pages, 19059028 bytes).
 PDF statistics:
- 602 PDF objects out of 1000 (max. 8388607)
- 493 compressed objects within 5 object streams
- 106 named destinations out of 1000 (max. 500000)
+ 594 PDF objects out of 1000 (max. 8388607)
+ 487 compressed objects within 5 object streams
+ 104 named destinations out of 1000 (max. 500000)
  387 words of extra memory for PDF output out of 10000 (max. 10000000)
 
