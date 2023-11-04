@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.14)  3 NOV 2023 23:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.14)  4 NOV 2023 15:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -481,6 +481,15 @@ LaTeX Warning: Label `tab:summary tables of transformed variables' multiply defi
 
 LaTeX Warning: Label `tab:summary tables of transformed variables' multiply defined.
 
+
+LaTeX Warning: Label `tab:summary tables of transformed variables' multiply defined.
+
+
+LaTeX Warning: Label `tab:summary tables of transformed variables' multiply defined.
+
+
+LaTeX Warning: Label `tab:summary tables of transformed variables' multiply defined.
+
 )
 \openout1 = `WorkTeam7_Project.aux'.
 
@@ -578,15 +587,15 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 129.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 145.
+(Font)              <10> on input line 147.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 145.
+(Font)              <7> on input line 147.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 145.
+(Font)              <5> on input line 147.
 <WorkTeam7_Project_files/figure-latex/ggpairs-1.pdf, id=134, 578.16pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/ggpairs-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/ggpairs-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/ggpairs-1.pdf  used on input line 179.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/ggpairs-1.pdf  used on input line 194.
 (pdftex.def)             Requested size: 469.75385pt x 293.59616pt.
 [1
 
@@ -594,194 +603,194 @@ Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/ggpairs-1.pdf  use
 <WorkTeam7_Project_files/figure-latex/unnamed-chunk-3-1.pdf, id=148, 505.89pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-3-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 218.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 236.
 (pdftex.def)             Requested size: 469.76265pt x 201.32684pt.
 [2 <./WorkTeam7_Project_files/figure-latex/ggpairs-1.pdf>] [3 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-3-1.pdf>]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 322.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 345.
 (c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [4]
-<WorkTeam7_Project_files/figure-latex/bee_colonies_2 individually-1.pdf, id=189, 361.35pt x 216.81pt>
+)
+<WorkTeam7_Project_files/figure-latex/bee_colonies_2 individually-1.pdf, id=184, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/bee_colonies_2 individually-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/bee_colonies_2 individually-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/bee_colonies_2 individually-1.pdf  used on input line 415.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/bee_colonies_2 individually-1.pdf  used on input line 372.
 (pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
-[5]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-19-1.pdf, id=196, 361.35pt x 216.81pt>
+[4 <./WorkTeam7_Project_files/figure-latex/bee_colonies_2 individually-1.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-19-1.pdf, id=198, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-19-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-19-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-19-1.pdf  used on input line 447.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-19-1.pdf  used on input line 406.
 (pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
-[6 <./WorkTeam7_Project_files/figure-latex/bee_colonies_2 individually-1.pdf>] [7 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-19-1.pdf>]
-Overfull \hbox (5.16614pt too wide) detected at line 543
+[5 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-19-1.pdf>]
+Overfull \hbox (5.16614pt too wide) detected at line 507
 [] \OT1/lmr/m/n/10 = 61262 + 0\OML/lmm/m/it/10 :\OT1/lmr/m/n/10 309(\OML/lmm/m/it/10 popdensity\OT1/lmr/m/n/10 ) + 0\OML/lmm/m/it/10 :\OT1/lmr/m/n/10 466(\OML/lmm/m/it/10 grazingrotation\OT1/lmr/m/n/10 ) + 1\OML/lmm/m/it/10 :\OT1/lmr/m/n/10 005(\OML/lmm/m/it/10 fertilizeruse\OT1/lmr/m/n/10 ) + 1\OML/lmm/m/it/10 :\OT1/lmr/m/n/10 001(\OML/lmm/m/it/10 farmacres\OT1/lmr/m/n/10 )
  []
 
-[8]
+[6]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 556.
-<WorkTeam7_Project_files/figure-latex/model checking for untransformed with everything accept bees-1.pdf, id=233, 505.89pt x 216.81pt>
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 520.
+<WorkTeam7_Project_files/figure-latex/model checking for untransformed with everything accept bees-1.pdf, id=224, 505.89pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/model checking for untransformed with everything accept bees-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/model checking for untransformed with everything accept bees-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/model checking for untransformed with everything accept bees-1.pdf  used on input line 605.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/model checking for untransformed with everything accept bees-1.pdf  used on input line 569.
 (pdftex.def)             Requested size: 469.76265pt x 201.32684pt.
-[9]
-<WorkTeam7_Project_files/figure-latex/conditions for full and full-bees-1.pdf, id=243, 505.89pt x 361.35pt>
+[7]
+<WorkTeam7_Project_files/figure-latex/conditions for full and full-bees-1.pdf, id=235, 505.89pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/conditions for full and full-bees-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/conditions for full and full-bees-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/conditions for full and full-bees-1.pdf  used on input line 607.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/conditions for full and full-bees-1.pdf  used on input line 571.
 (pdftex.def)             Requested size: 469.76265pt x 335.54477pt.
-<WorkTeam7_Project_files/figure-latex/scatterplots for transformations-1.pdf, id=244, 361.35pt x 216.81pt>
+<WorkTeam7_Project_files/figure-latex/scatterplots for transformations-1.pdf, id=236, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/scatterplots for transformations-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/scatterplots for transformations-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/scatterplots for transformations-1.pdf  used on input line 613.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/scatterplots for transformations-1.pdf  used on input line 577.
 (pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
-[10 <./WorkTeam7_Project_files/figure-latex/model checking for untransformed with everything accept bees-1.pdf> <./WorkTeam7_Project_files/figure-latex/conditions for full and full-bees-1.pdf>]
-<WorkTeam7_Project_files/figure-latex/ggpairs with transformed farm income-1.pdf, id=268, 433.62pt x 433.62pt>
+[8 <./WorkTeam7_Project_files/figure-latex/model checking for untransformed with everything accept bees-1.pdf> <./WorkTeam7_Project_files/figure-latex/conditions for full and full-bees-1.pdf>] [9 <./WorkTeam7_Project_files/figure-latex/scatterplots for transformations-1.pdf>]
+<WorkTeam7_Project_files/figure-latex/ggpairs with transformed farm income-1.pdf, id=269, 433.62pt x 433.62pt>
 File: WorkTeam7_Project_files/figure-latex/ggpairs with transformed farm income-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/ggpairs with transformed farm income-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/ggpairs with transformed farm income-1.pdf  used on input line 740.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/ggpairs with transformed farm income-1.pdf  used on input line 745.
 (pdftex.def)             Requested size: 433.63878pt x 433.63878pt.
-[11 <./WorkTeam7_Project_files/figure-latex/scatterplots for transformations-1.pdf>] [12]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-21-1.pdf, id=292, 361.35pt x 216.81pt>
+[10] [11]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-21-1.pdf, id=291, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-21-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-21-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-21-1.pdf  used on input line 746.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-21-1.pdf  used on input line 751.
 (pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
-[13 <./WorkTeam7_Project_files/figure-latex/ggpairs with transformed farm income-1.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-22-1.pdf, id=306, 505.89pt x 216.81pt>
+[12 <./WorkTeam7_Project_files/figure-latex/ggpairs with transformed farm income-1.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-22-1.pdf, id=304, 505.89pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-22-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-22-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-22-1.pdf  used on input line 752.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-22-1.pdf  used on input line 757.
 (pdftex.def)             Requested size: 469.76265pt x 201.32684pt.
-[14 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-21-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-22-1.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-24-1.pdf, id=327, 578.16pt x 180.675pt>
+[13 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-21-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-22-1.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-24-1.pdf, id=326, 578.16pt x 180.675pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-24-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-24-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-24-1.pdf  used on input line 795.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-24-1.pdf  used on input line 800.
 (pdftex.def)             Requested size: 469.75385pt x 146.79807pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-25-1.pdf, id=328, 578.16pt x 180.675pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-25-1.pdf, id=327, 578.16pt x 180.675pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-25-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-25-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-25-1.pdf  used on input line 805.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-25-1.pdf  used on input line 810.
 (pdftex.def)             Requested size: 469.75385pt x 146.79807pt.
-[15 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-24-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-25-1.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf, id=352, 578.16pt x 180.675pt>
+[14 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-24-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-25-1.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf, id=351, 578.16pt x 180.675pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf  used on input line 813.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf  used on input line 818.
 (pdftex.def)             Requested size: 469.75385pt x 146.79807pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf, id=353, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf, id=352, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf  used on input line 825.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf  used on input line 830.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf, id=354, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf, id=353, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf  used on input line 826.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf  used on input line 831.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
 
-Overfull \hbox (255.16544pt too wide) in paragraph at lines 825--827
+Overfull \hbox (255.16544pt too wide) in paragraph at lines 830--832
 [][] [] 
  []
 
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf, id=355, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf, id=354, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf  used on input line 832.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf  used on input line 837.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-[16 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf, id=383, 361.35pt x 361.35pt>
+[15 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-26-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-2.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf, id=382, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf  used on input line 838.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf  used on input line 843.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf, id=384, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf, id=383, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf  used on input line 839.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf  used on input line 844.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
 
-Overfull \hbox (255.16544pt too wide) in paragraph at lines 838--840
+Overfull \hbox (255.16544pt too wide) in paragraph at lines 843--845
 [][] [] 
  []
 
-[17 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf, id=397, 361.35pt x 361.35pt>
+[16 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-3.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf, id=396, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf  used on input line 849.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf  used on input line 854.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf, id=398, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf, id=397, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf  used on input line 850.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf  used on input line 855.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
 
-Overfull \hbox (255.16544pt too wide) in paragraph at lines 849--851
+Overfull \hbox (255.16544pt too wide) in paragraph at lines 854--856
 [][] [] 
  []
 
-[18 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf, id=420, 361.35pt x 361.35pt>
+[17 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-4.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-27-5.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf, id=419, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf  used on input line 856.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf  used on input line 861.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-[19 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf, id=439, 361.35pt x 361.35pt>
+[18 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-1.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-2.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf, id=437, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf  used on input line 862.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf  used on input line 867.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf, id=440, 361.35pt x 361.35pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf, id=438, 361.35pt x 361.35pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf  used on input line 863.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf  used on input line 868.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
 
-Overfull \hbox (255.16544pt too wide) in paragraph at lines 862--864
+Overfull \hbox (255.16544pt too wide) in paragraph at lines 867--869
 [][] [] 
  []
 
-[20 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf, id=453, 361.35pt x 216.81pt>
+[19 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-3.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf, id=452, 361.35pt x 216.81pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf  used on input line 888.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf  used on input line 893.
 (pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
-[21 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf>] [22 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf>]
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf, id=486, 505.89pt x 180.675pt>
+[20 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-4.pdf> <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-28-5.pdf>] [21 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-29-1.pdf>]
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf, id=485, 505.89pt x 180.675pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf  used on input line 953.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf  used on input line 958.
 (pdftex.def)             Requested size: 469.76265pt x 167.77237pt.
-<WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf, id=487, 505.89pt x 180.675pt>
+<WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf, id=486, 505.89pt x 180.675pt>
 File: WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf Graphic file (type pdf)
 <use WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf>
-Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf  used on input line 982.
+Package pdftex.def Info: WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf  used on input line 987.
 (pdftex.def)             Requested size: 469.76265pt x 167.77237pt.
-[23 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf>] [24 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf>] (./WorkTeam7_Project.aux)
+[22 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-33-1.pdf>] [23 <./WorkTeam7_Project_files/figure-latex/unnamed-chunk-35-1.pdf>] (./WorkTeam7_Project.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `WorkTeam7_Project.out' has not changed.
-(rerunfilecheck)             Checksum: D28E0F39E13659B57CC105D5F3D117CB;7713.
+(rerunfilecheck)             Checksum: 763D4A55E4F936276836BE6D0C80A39B;7611.
  ) 
 Here is how much of TeX's memory you used:
- 13082 strings out of 476928
- 218765 string characters out of 5823805
- 558525 words of memory out of 5000000
+ 13084 strings out of 476928
+ 218784 string characters out of 5823805
+ 565511 words of memory out of 5000000
  33960 multiletter control sequences out of 15000+600000
  516050 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  72i,9n,77p,631b,578s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}<c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/Users/emaca/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on WorkTeam7_Project.pdf (24 pages, 19107853 bytes).
+Output written on WorkTeam7_Project.pdf (23 pages, 19106280 bytes).
 PDF statistics:
- 603 PDF objects out of 1000 (max. 8388607)
+ 602 PDF objects out of 1000 (max. 8388607)
  493 compressed objects within 5 object streams
- 104 named destinations out of 1000 (max. 500000)
+ 106 named destinations out of 1000 (max. 500000)
  387 words of extra memory for PDF output out of 10000 (max. 10000000)
 
